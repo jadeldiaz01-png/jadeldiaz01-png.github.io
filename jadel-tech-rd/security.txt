@@ -1,0 +1,3 @@
+Contact: https://jadeldiaz01-png.github.io/jadel-tech-rd/contact.html
+Preferred-Languages: en, es
+Canonical: https://jadeldiaz01-png.github.io/jadel-tech-rd/security.txt
