@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jadeldiaz01-png.github.io/jadel-tech-rd/sitemap.xml
