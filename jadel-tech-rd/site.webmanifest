@@ -1,0 +1,8 @@
+{
+  "name": "Jadel Tech RD",
+  "short_name": "Jadel Tech RD",
+  "start_url": "/jadel-tech-rd/",
+  "display": "standalone",
+  "background_color": "#07111f",
+  "theme_color": "#07111f"
+}
