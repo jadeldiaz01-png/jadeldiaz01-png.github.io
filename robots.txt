@@ -1,3 +1,4 @@
+# security-app-e2e-canary: 2026-08-30
 User-agent: *
 Allow: /
 Sitemap: https://jadeltechrd.com/sitemap.xml
