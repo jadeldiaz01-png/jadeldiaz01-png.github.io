@@ -2,336 +2,320 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="google-site-verification" content="gMla9SDPMV7FkAXAyTsElEv3BQCcVCdmB7aUhkXEifQ">
-  <title>Jadel Tech RD | Aplicaciones e integraciones</title>
-  <meta name="description" content="Página pública de Jadel Tech RD para información de la aplicación, Política de Privacidad y Condiciones del Servicio.">
-  <meta name="robots" content="index,follow">
-  <link rel="canonical" href="https://jadeltechrd.com/">
-  <style>
-    :root {
-      color-scheme: light;
-      --bg: #f4f7fb;
-      --surface: #ffffff;
-      --text: #172033;
-      --muted: #5c677d;
-      --border: #dfe6ef;
-      --accent: #155eef;
-      --accent-soft: #eef4ff;
-      --success: #087443;
-      --shadow: 0 16px 40px rgba(25, 39, 70, .08);
-    }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.7;
-      color: var(--text);
-      background: var(--bg);
-    }
-    a { color: var(--accent); }
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: rgba(255,255,255,.96);
-      border-bottom: 1px solid var(--border);
-      backdrop-filter: blur(10px);
-    }
-    .bar, .container {
-      width: min(1080px, calc(100% - 32px));
-      margin: 0 auto;
-    }
-    .bar {
-      min-height: 68px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 800;
-    }
-    .mark {
-      display: grid;
-      place-items: center;
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      background: var(--accent);
-      color: white;
-      font-size: 14px;
-      letter-spacing: .04em;
-    }
-    nav { display: flex; flex-wrap: wrap; gap: 16px; }
-    nav a { text-decoration: none; font-weight: 650; color: #35415a; }
-    nav a:hover, nav a[aria-current="page"] { color: var(--accent); }
-    .container { padding: 48px 0 64px; }
-    .view { display: none; }
-    .view.active { display: block; }
-    .hero {
-      padding: 54px;
-      border-radius: 24px;
-      background: linear-gradient(135deg, #ffffff 0%, #eef4ff 100%);
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-    }
-    .eyebrow {
-      display: inline-flex;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-weight: 800;
-      font-size: .82rem;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-    }
-    h1 { font-size: clamp(2.1rem, 5vw, 3.6rem); line-height: 1.08; margin: 18px 0; }
-    h2 { margin-top: 38px; line-height: 1.25; }
-    h3 { margin-bottom: 8px; }
-    .lead { color: var(--muted); font-size: 1.12rem; max-width: 780px; }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-      margin-top: 28px;
-    }
-    .card, .legal {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-    }
-    .card { padding: 24px; }
-    .legal { padding: clamp(24px, 5vw, 48px); }
-    .legal h1 { font-size: clamp(2rem, 5vw, 3rem); }
-    .legal p, .legal li { color: #35415a; }
-    .notice {
-      padding: 18px 20px;
-      border-left: 4px solid var(--accent);
-      border-radius: 10px;
-      background: var(--accent-soft);
-      margin: 24px 0;
-    }
-    .status { color: var(--success); font-weight: 750; }
-    footer {
-      border-top: 1px solid var(--border);
-      background: white;
-    }
-    .footer-inner {
-      width: min(1080px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 24px 0 36px;
-      color: var(--muted);
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-    .footer-links { display: flex; flex-wrap: wrap; gap: 14px; }
-    @media (max-width: 760px) {
-      .bar { align-items: flex-start; flex-direction: column; padding: 14px 0; }
-      .hero { padding: 30px 24px; }
-      .grid { grid-template-columns: 1fr; }
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1220">
+  <meta name="description" content="Jadel Tech RD - Página principal, Política de Privacidad y Condiciones del Servicio de la aplicación.">
+  <title>Jadel Tech RD</title>
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-<header class="site-header">
-  <div class="bar">
-    <a class="brand" href="https://jadeltechrd.com/">
-      <span class="mark">JT</span>
-      <span>Jadel Tech RD</span>
-    </a>
-    <nav aria-label="Navegación principal">
-      <a id="nav-home" href="https://jadeltechrd.com/">Inicio</a>
-      <a id="nav-privacy" href="https://jadeltechrd.com/?view=privacy">Privacidad</a>
-      <a id="nav-terms" href="https://jadeltechrd.com/?view=terms">Condiciones</a>
-      <a href="mailto:jadeldiaz01@gmail.com">Contacto</a>
-    </nav>
-  </div>
-</header>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
 
-<main class="container">
-  <section id="view-home" class="view" aria-labelledby="home-title">
-    <div class="hero">
-      <span class="eyebrow">Aplicación oficial</span>
-      <h1 id="home-title">Jadel Tech RD</h1>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="/" aria-label="Jadel Tech RD - Inicio">
+        <span class="brand-mark" aria-hidden="true">JT</span>
+        <span>Jadel Tech RD</span>
+      </a>
+      <nav class="nav" aria-label="Navegación principal">
+        <a href="/" data-nav="home">Inicio</a>
+        <a href="/?view=privacy" data-nav="privacy">Privacidad</a>
+        <a href="/?view=terms" data-nav="terms">Condiciones</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="shell">
+    <section class="hero" data-view="home">
+      <div class="eyebrow">Tecnología · Automatización · IA</div>
+      <h1>Jadel Tech RD</h1>
       <p class="lead">
-        Plataforma de software, automatización e integraciones API para operaciones digitales supervisadas.
-        Las aplicaciones de Jadel Tech RD utilizan integraciones oficiales y controles de autorización para
-        ejecutar únicamente las funciones que el usuario haya permitido.
+        Sitio oficial de información pública para nuestras aplicaciones y servicios digitales.
+        Aquí puedes consultar la información general de la aplicación, nuestra Política de
+        Privacidad y las Condiciones del Servicio.
       </p>
-      <p class="status">Página pública disponible para usuarios, revisores y proveedores de plataformas.</p>
-    </div>
+      <div class="actions">
+        <a class="button primary" href="/?view=privacy">Ver Política de Privacidad</a>
+        <a class="button secondary" href="/?view=terms">Ver Condiciones del Servicio</a>
+      </div>
+    </section>
 
-    <div class="grid" aria-label="Información principal de la aplicación">
+    <section class="grid" data-view="home" aria-label="Información de la aplicación">
       <article class="card">
-        <h2>Propósito</h2>
-        <p>Facilitar flujos autorizados de gestión de contenido, automatización y conexión con servicios externos mediante APIs oficiales.</p>
+        <span class="card-kicker">Aplicación</span>
+        <h2>Página principal</h2>
+        <p>
+          Esta página funciona como punto público de referencia para usuarios, revisores de
+          plataformas y terceros que necesiten identificar el sitio oficial de la aplicación.
+        </p>
       </article>
       <article class="card">
-        <h2>Control del usuario</h2>
-        <p>El usuario conserva el control de sus cuentas y puede revocar permisos desde la plataforma correspondiente cuando esa función esté disponible.</p>
+        <span class="card-kicker">Privacidad</span>
+        <h2>Uso responsable de datos</h2>
+        <p>
+          Explicamos qué información puede tratarse, para qué se utiliza, cómo se protege y cómo
+          pueden ejercerse solicitudes relacionadas con los datos personales.
+        </p>
       </article>
       <article class="card">
-        <h2>Seguridad</h2>
-        <p>Las integraciones deben aplicar permisos mínimos, validación, trazabilidad y protección de credenciales. No solicitamos contraseñas de plataformas conectadas.</p>
+        <span class="card-kicker">Transparencia</span>
+        <h2>Condiciones claras</h2>
+        <p>
+          Las Condiciones del Servicio establecen las reglas básicas para el acceso y uso de las
+          aplicaciones y servicios asociados a Jadel Tech RD.
+        </p>
       </article>
+    </section>
+
+    <article class="legal" data-view="privacy" hidden>
+      <div class="legal-heading">
+        <div class="eyebrow">Documento público</div>
+        <h1>Política de Privacidad</h1>
+        <p class="muted">Última actualización: 28 de agosto de 2026.</p>
+      </div>
+
+      <p>
+        Esta Política de Privacidad describe cómo Jadel Tech RD ("Jadel Tech RD", "nosotros" o
+        "nuestro") puede recopilar, utilizar, conservar y proteger información cuando una persona
+        utiliza una aplicación, servicio o integración que remite a este sitio.
+      </p>
+
+      <h2>1. Alcance</h2>
+      <p>
+        Esta política aplica a los servicios digitales de Jadel Tech RD que enlacen expresamente a
+        esta página. Los servicios de terceros, incluidas redes sociales, proveedores de identidad,
+        servicios de nube y otras plataformas externas, se rigen además por sus propias políticas.
+      </p>
+
+      <h2>2. Información que podemos tratar</h2>
+      <p>Dependiendo de las funciones que el usuario decida utilizar, podemos tratar:</p>
+      <ul>
+        <li>Datos de cuenta y perfil que el usuario proporcione directamente.</li>
+        <li>Identificadores técnicos necesarios para autenticar sesiones y operar integraciones.</li>
+        <li>Información que una plataforma externa permita compartir tras una autorización expresa del usuario.</li>
+        <li>Datos operativos y de diagnóstico, como registros de errores, actividad de seguridad y métricas técnicas.</li>
+        <li>Contenido que el propio usuario envíe a la aplicación para procesar una función solicitada.</li>
+      </ul>
+      <p>
+        Procuramos limitar la recopilación al mínimo necesario para proporcionar la funcionalidad
+        solicitada y cumplir obligaciones de seguridad, prevención de abuso y operación del servicio.
+      </p>
+
+      <h2>3. Cómo utilizamos la información</h2>
+      <p>La información puede utilizarse para:</p>
+      <ul>
+        <li>Proporcionar, mantener y mejorar las funciones de la aplicación.</li>
+        <li>Autenticar usuarios y mantener la seguridad de las sesiones.</li>
+        <li>Ejecutar acciones o integraciones que el usuario solicite y autorice.</li>
+        <li>Detectar fraude, abuso, fallos técnicos, incidentes de seguridad y uso no autorizado.</li>
+        <li>Cumplir obligaciones legales, regulatorias o contractuales aplicables.</li>
+        <li>Atender solicitudes de soporte, privacidad, corrección o eliminación de datos.</li>
+      </ul>
+
+      <h2>4. Integraciones con plataformas de terceros</h2>
+      <p>
+        Cuando una función requiera conectarse con una plataforma externa, la aplicación utilizará
+        únicamente los permisos que hayan sido concedidos y necesarios para la función solicitada.
+        La autorización otorgada a una plataforma puede revocarse desde los controles que esa
+        plataforma ponga a disposición del usuario.
+      </p>
+
+      <h2>5. Compartición de información</h2>
+      <p>
+        No vendemos datos personales. Podemos compartir información con proveedores que nos ayudan
+        a operar infraestructura, seguridad, alojamiento, almacenamiento, análisis técnico o soporte,
+        únicamente cuando sea necesario para prestar el servicio y sujeto a controles apropiados.
+        También podremos divulgar información cuando exista una obligación legal válida o sea
+        necesario para proteger derechos, seguridad o integridad del servicio.
+      </p>
+
+      <h2>6. Conservación</h2>
+      <p>
+        Conservamos los datos solo durante el tiempo razonablemente necesario para prestar el
+        servicio, mantener registros de seguridad, cumplir obligaciones aplicables y resolver
+        disputas. Los periodos concretos pueden variar según el tipo de dato y la función utilizada.
+      </p>
+
+      <h2>7. Seguridad</h2>
+      <p>
+        Aplicamos medidas administrativas, técnicas y organizativas razonables para reducir riesgos
+        de acceso no autorizado, pérdida, alteración o divulgación. Ningún sistema conectado a
+        Internet puede garantizar seguridad absoluta, por lo que revisamos y mejoramos los controles
+        conforme evolucionan los riesgos.
+      </p>
+
+      <h2>8. Derechos y solicitudes de privacidad</h2>
+      <p>
+        Dependiendo de la jurisdicción, una persona puede tener derechos de acceso, corrección,
+        oposición, limitación, portabilidad o eliminación de determinados datos personales. Para
+        ejercer una solicitud, debe utilizar el canal de soporte o contacto indicado dentro de la
+        aplicación o servicio desde el cual fue remitido a esta página. Podremos solicitar información
+        razonable para verificar la identidad y evitar solicitudes fraudulentas.
+      </p>
+
+      <h2>9. Eliminación de datos</h2>
+      <p>
+        Un usuario puede solicitar la eliminación de datos asociados a su uso del servicio mediante
+        el canal de soporte o contacto de la aplicación. Cuando corresponda, eliminaremos o
+        anonimizaremos los datos que no debamos conservar por razones legales, de seguridad,
+        prevención de fraude, contabilidad o resolución de disputas.
+      </p>
+
+      <h2>10. Menores</h2>
+      <p>
+        Los servicios no están diseñados intencionalmente para recopilar datos de menores cuando la
+        legislación aplicable requiera autorización de un padre, madre o tutor. Si se detecta que se
+        han recibido datos de un menor de forma indebida, se tomarán medidas razonables para su
+        eliminación.
+      </p>
+
+      <h2>11. Transferencias internacionales</h2>
+      <p>
+        Algunos proveedores de infraestructura pueden procesar información en países distintos al
+        país del usuario. Cuando resulte aplicable, utilizaremos mecanismos y medidas de protección
+        razonables para esas transferencias.
+      </p>
+
+      <h2>12. Cambios a esta política</h2>
+      <p>
+        Podemos actualizar esta Política de Privacidad para reflejar cambios en nuestros servicios,
+        controles o requisitos aplicables. Publicaremos la versión vigente en esta misma dirección y
+        actualizaremos la fecha mostrada al inicio.
+      </p>
+
+      <h2>13. Contacto</h2>
+      <p>
+        Para preguntas sobre privacidad, utilice el canal de soporte o contacto publicado dentro de
+        la aplicación o servicio de Jadel Tech RD desde el cual fue dirigido a esta política.
+      </p>
+    </article>
+
+    <article class="legal" data-view="terms" hidden>
+      <div class="legal-heading">
+        <div class="eyebrow">Documento público</div>
+        <h1>Condiciones del Servicio</h1>
+        <p class="muted">Última actualización: 28 de agosto de 2026.</p>
+      </div>
+
+      <p>
+        Estas Condiciones del Servicio regulan el acceso y uso de las aplicaciones y servicios de
+        Jadel Tech RD que remitan expresamente a esta página. Al utilizar un servicio aplicable, el
+        usuario acepta estas condiciones y las políticas vinculadas al servicio.
+      </p>
+
+      <h2>1. Uso del servicio</h2>
+      <p>
+        El usuario debe utilizar el servicio únicamente para fines legítimos y de conformidad con la
+        legislación aplicable, estas condiciones y las reglas de cualquier plataforma de terceros
+        integrada con el servicio.
+      </p>
+
+      <h2>2. Requisitos de cuenta y autorización</h2>
+      <p>
+        Algunas funciones pueden requerir autenticación o autorización mediante un proveedor externo.
+        El usuario es responsable de mantener el control de sus credenciales y de revisar los permisos
+        que concede. No debe proporcionar acceso a cuentas, contenido o sistemas que no esté autorizado
+        a utilizar.
+      </p>
+
+      <h2>3. Usos prohibidos</h2>
+      <p>No está permitido utilizar el servicio para:</p>
+      <ul>
+        <li>Violar leyes, derechos de terceros o términos de plataformas externas.</li>
+        <li>Obtener acceso no autorizado a cuentas, sistemas, datos o redes.</li>
+        <li>Distribuir malware, realizar fraude, suplantación, abuso o manipulación engañosa.</li>
+        <li>Interferir deliberadamente con la disponibilidad, seguridad o integridad del servicio.</li>
+        <li>Intentar eludir controles de acceso, límites de uso, mecanismos antifraude o medidas de seguridad.</li>
+      </ul>
+
+      <h2>4. Integraciones de terceros</h2>
+      <p>
+        Algunas funciones dependen de APIs, redes sociales, proveedores de nube u otros servicios de
+        terceros. Su disponibilidad puede cambiar sin control directo de Jadel Tech RD. El usuario
+        también debe cumplir las condiciones y políticas de esos proveedores.
+      </p>
+
+      <h2>5. Contenido y datos del usuario</h2>
+      <p>
+        El usuario conserva los derechos que le correspondan sobre el contenido que proporciona.
+        Concede únicamente los permisos necesarios para procesar ese contenido con el fin de prestar
+        la función solicitada, operar el servicio, mantener seguridad y cumplir obligaciones aplicables.
+      </p>
+
+      <h2>6. Funciones automatizadas e inteligencia artificial</h2>
+      <p>
+        Cuando el servicio incluya funciones automatizadas o basadas en inteligencia artificial, sus
+        resultados pueden contener errores o requerir revisión humana. El usuario debe verificar la
+        información antes de tomar decisiones relevantes y no debe considerar una salida automatizada
+        como sustituto de asesoría profesional cuando esta sea necesaria.
+      </p>
+
+      <h2>7. Disponibilidad y modificaciones</h2>
+      <p>
+        Podemos actualizar, limitar, suspender o modificar funciones por motivos de mantenimiento,
+        seguridad, cumplimiento, cambios de proveedores o evolución del producto. Cuando sea razonable,
+        procuraremos evitar interrupciones innecesarias.
+      </p>
+
+      <h2>8. Propiedad intelectual</h2>
+      <p>
+        Salvo los derechos pertenecientes a usuarios o terceros, el software, diseño, documentación,
+        marcas y demás elementos propios del servicio están protegidos por los derechos que resulten
+        aplicables. No se concede ningún derecho distinto del necesario para utilizar el servicio de
+        acuerdo con estas condiciones.
+      </p>
+
+      <h2>9. Seguridad</h2>
+      <p>
+        El usuario debe informar de forma responsable cualquier problema de seguridad que detecte y
+        abstenerse de explotar, divulgar o utilizar una vulnerabilidad para obtener acceso, datos o
+        beneficios no autorizados.
+      </p>
+
+      <h2>10. Suspensión o terminación</h2>
+      <p>
+        El acceso puede limitarse o suspenderse cuando sea necesario para proteger usuarios, sistemas,
+        terceros o cumplimiento legal, o cuando exista una violación material de estas condiciones.
+      </p>
+
+      <h2>11. Exclusión razonable de garantías</h2>
+      <p>
+        Dentro de los límites permitidos por la legislación aplicable, el servicio se proporciona
+        según su disponibilidad. No garantizamos que todas las funciones permanezcan ininterrumpidas,
+        libres de errores o compatibles permanentemente con servicios de terceros.
+      </p>
+
+      <h2>12. Limitación de responsabilidad</h2>
+      <p>
+        La responsabilidad de las partes se determinará conforme a la legislación aplicable. Nada en
+        estas condiciones pretende excluir derechos o responsabilidades que legalmente no puedan ser
+        excluidos o limitados.
+      </p>
+
+      <h2>13. Cambios en las condiciones</h2>
+      <p>
+        Podemos actualizar estas condiciones cuando cambien el servicio, las leyes o las integraciones.
+        La versión vigente se publicará en esta misma dirección con su fecha de actualización.
+      </p>
+
+      <h2>14. Contacto</h2>
+      <p>
+        Para preguntas relacionadas con estas condiciones, utilice el canal de soporte o contacto
+        publicado dentro de la aplicación o servicio de Jadel Tech RD correspondiente.
+      </p>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-inner">
+      <p>© <span id="year"></span> Jadel Tech RD.</p>
+      <nav aria-label="Enlaces legales">
+        <a href="/?view=privacy">Política de Privacidad</a>
+        <a href="/?view=terms">Condiciones del Servicio</a>
+      </nav>
     </div>
+  </footer>
 
-    <div class="notice">
-      <strong>Enlaces públicos requeridos por plataformas:</strong><br>
-      Página principal: <a href="https://jadeltechrd.com/">https://jadeltechrd.com/</a><br>
-      Política de Privacidad: <a href="https://jadeltechrd.com/?view=privacy">https://jadeltechrd.com/?view=privacy</a><br>
-      Condiciones del Servicio: <a href="https://jadeltechrd.com/?view=terms">https://jadeltechrd.com/?view=terms</a>
-    </div>
-  </section>
-
-  <section id="view-privacy" class="view legal" aria-labelledby="privacy-title">
-    <span class="eyebrow">Documento público</span>
-    <h1 id="privacy-title">Política de Privacidad</h1>
-    <p><strong>Responsable:</strong> Jadel Tech RD.</p>
-    <p><strong>Fecha de actualización:</strong> 28 de agosto de 2026.</p>
-
-    <h2>1. Alcance</h2>
-    <p>Esta Política de Privacidad describe cómo las aplicaciones y servicios operados por Jadel Tech RD pueden recopilar, utilizar, proteger, conservar y eliminar información cuando una persona utiliza una integración autorizada.</p>
-
-    <h2>2. Información que podemos procesar</h2>
-    <p>Dependiendo de la función utilizada y de los permisos concedidos por el usuario, podemos procesar:</p>
-    <ul>
-      <li>identificadores básicos de la cuenta autorizada;</li>
-      <li>identificadores de páginas, perfiles profesionales, canales u otros recursos administrados por el usuario;</li>
-      <li>tokens de autorización emitidos por la plataforma conectada;</li>
-      <li>contenido, títulos, descripciones, metadatos o instrucciones que el usuario decida enviar para una operación;</li>
-      <li>resultados técnicos de las operaciones realizadas mediante APIs oficiales;</li>
-      <li>registros de seguridad, auditoría, errores y funcionamiento necesarios para proteger y mantener el servicio.</li>
-    </ul>
-    <p>No solicitamos la contraseña de las cuentas de Facebook, Instagram, Google, YouTube u otros proveedores conectados mediante OAuth o mecanismos equivalentes.</p>
-
-    <h2>3. Finalidades</h2>
-    <p>La información se utiliza para autenticar al usuario, mostrar recursos autorizados, ejecutar funciones solicitadas, confirmar resultados, prevenir abuso, investigar errores, proporcionar soporte y mantener registros de seguridad o auditoría cuando sean necesarios.</p>
-
-    <h2>4. Integraciones con terceros</h2>
-    <p>Cuando el usuario conecta un servicio externo, la información necesaria puede transmitirse a ese proveedor para ejecutar la función solicitada. Esto puede incluir Meta, Facebook, Instagram, Google, YouTube u otros proveedores que el usuario conecte de forma expresa.</p>
-
-    <h2>5. Compartición y venta de datos</h2>
-    <p>Jadel Tech RD no vende datos personales. La información solo se comparte con proveedores necesarios para prestar la función solicitada, mantener la infraestructura, cumplir obligaciones legales aplicables o proteger la seguridad del servicio.</p>
-
-    <h2>6. Seguridad</h2>
-    <p>Aplicamos medidas técnicas y organizativas razonables, que pueden incluir HTTPS, control de acceso, gestión de secretos, validación de solicitudes, permisos mínimos, registros de auditoría y rotación o revocación de credenciales cuando corresponde.</p>
-
-    <h2>7. Conservación</h2>
-    <p>Los datos se conservan únicamente durante el tiempo razonablemente necesario para proporcionar el servicio, mantener seguridad y trazabilidad, cumplir obligaciones legales aplicables o resolver incidentes. Los periodos concretos pueden variar según la naturaleza del dato y el proveedor conectado.</p>
-
-    <h2>8. Eliminación y revocación</h2>
-    <p>El usuario puede revocar el acceso desde la configuración del proveedor conectado y puede solicitar acceso, corrección o eliminación de información escribiendo a <a href="mailto:jadeldiaz01@gmail.com">jadeldiaz01@gmail.com</a>. Las solicitudes se procesarán de acuerdo con las obligaciones aplicables y las limitaciones técnicas o legales pertinentes.</p>
-
-    <h2>9. Menores</h2>
-    <p>Los servicios no están dirigidos intencionalmente a personas que no tengan la edad o capacidad legal requerida para administrar la cuenta conectada o conceder una autorización válida.</p>
-
-    <h2>10. Cambios</h2>
-    <p>Esta política puede actualizarse cuando cambien las funciones, la legislación aplicable o las políticas de proveedores. La fecha de actualización se mostrará en esta página.</p>
-
-    <h2>11. Contacto</h2>
-    <p>Para consultas o solicitudes relacionadas con privacidad: <a href="mailto:jadeldiaz01@gmail.com">jadeldiaz01@gmail.com</a>.</p>
-  </section>
-
-  <section id="view-terms" class="view legal" aria-labelledby="terms-title">
-    <span class="eyebrow">Documento público</span>
-    <h1 id="terms-title">Condiciones del Servicio</h1>
-    <p><strong>Proveedor:</strong> Jadel Tech RD.</p>
-    <p><strong>Fecha de actualización:</strong> 28 de agosto de 2026.</p>
-
-    <h2>1. Aceptación</h2>
-    <p>Al utilizar una aplicación o servicio de Jadel Tech RD, aceptas estas Condiciones del Servicio y la Política de Privacidad aplicable.</p>
-
-    <h2>2. Servicio</h2>
-    <p>Jadel Tech RD proporciona herramientas de software, automatización e integración para ayudar a usuarios autorizados a realizar operaciones digitales mediante interfaces y APIs compatibles.</p>
-
-    <h2>3. Autorización de cuentas</h2>
-    <p>Solo puedes conectar cuentas, páginas, canales u otros recursos que te pertenezcan o para los cuales tengas autorización suficiente. Está prohibido acceder, controlar o publicar en recursos de terceros sin permiso.</p>
-
-    <h2>4. Responsabilidad sobre el contenido</h2>
-    <p>El usuario es responsable de que los textos, imágenes, videos, audios, marcas, datos y demás materiales utilizados sean legales, estén autorizados y respeten los derechos de terceros y las políticas del proveedor de destino.</p>
-
-    <h2>5. Usos prohibidos</h2>
-    <ul>
-      <li>suplantación de identidad, fraude o acceso no autorizado;</li>
-      <li>publicación de contenido ilegal, engañoso o abusivo;</li>
-      <li>distribución de malware, spam o material destinado a perjudicar a terceros;</li>
-      <li>evasión de límites, controles de seguridad, cuotas o mecanismos de autorización;</li>
-      <li>infracción de propiedad intelectual o de las políticas de una plataforma conectada.</li>
-    </ul>
-
-    <h2>6. Servicios de terceros</h2>
-    <p>Algunas funciones dependen de plataformas externas. El uso de esas funciones también está sujeto a sus propios términos, políticas, permisos, disponibilidad y límites técnicos.</p>
-
-    <h2>7. Disponibilidad y cambios</h2>
-    <p>El servicio puede modificarse, suspenderse o quedar temporalmente indisponible por mantenimiento, seguridad, cambios en APIs, revocación de permisos, cuotas o causas externas. No se garantiza disponibilidad ininterrumpida ni resultados específicos.</p>
-
-    <h2>8. Seguridad y suspensión</h2>
-    <p>Jadel Tech RD puede limitar o suspender funciones cuando detecte riesgo de seguridad, uso no autorizado, incumplimiento de estas condiciones o violación de políticas de proveedores conectados.</p>
-
-    <h2>9. Revocación y terminación</h2>
-    <p>El usuario puede dejar de utilizar el servicio y revocar las autorizaciones concedidas desde la plataforma correspondiente. También puede solicitar la eliminación de información conforme a la Política de Privacidad.</p>
-
-    <h2>10. Limitación de responsabilidad</h2>
-    <p>En la medida permitida por la legislación aplicable, el servicio se proporciona sin garantía de disponibilidad continua, ausencia absoluta de errores, rendimiento comercial o resultados económicos específicos.</p>
-
-    <h2>11. Cambios en estas condiciones</h2>
-    <p>Estas condiciones pueden actualizarse para reflejar cambios en el servicio, requisitos legales, seguridad o políticas de terceros. La versión publicada en esta página será la versión vigente.</p>
-
-    <h2>12. Contacto</h2>
-    <p>Para consultas sobre estas condiciones: <a href="mailto:jadeldiaz01@gmail.com">jadeldiaz01@gmail.com</a>.</p>
-  </section>
-</main>
-
-<footer>
-  <div class="footer-inner">
-    <div>© 2026 Jadel Tech RD. Todos los derechos reservados.</div>
-    <div class="footer-links">
-      <a href="https://jadeltechrd.com/">Inicio</a>
-      <a href="https://jadeltechrd.com/?view=privacy">Política de Privacidad</a>
-      <a href="https://jadeltechrd.com/?view=terms">Condiciones del Servicio</a>
-    </div>
-  </div>
-</footer>
-
-<script>
-  (function () {
-    const allowed = new Set(["home", "privacy", "terms"]);
-    const params = new URLSearchParams(window.location.search);
-    const requested = (params.get("view") || "home").toLowerCase();
-    const view = allowed.has(requested) ? requested : "home";
-
-    document.querySelectorAll(".view").forEach((node) => node.classList.remove("active"));
-    document.getElementById(`view-${view}`).classList.add("active");
-
-    document.querySelectorAll("nav a").forEach((link) => link.removeAttribute("aria-current"));
-    const activeNav = document.getElementById(`nav-${view}`);
-    if (activeNav) activeNav.setAttribute("aria-current", "page");
-
-    const titles = {
-      home: "Jadel Tech RD | Aplicaciones e integraciones",
-      privacy: "Política de Privacidad | Jadel Tech RD",
-      terms: "Condiciones del Servicio | Jadel Tech RD"
-    };
-    const canonicals = {
-      home: "https://jadeltechrd.com/",
-      privacy: "https://jadeltechrd.com/?view=privacy",
-      terms: "https://jadeltechrd.com/?view=terms"
-    };
-    document.title = titles[view];
-    document.querySelector('link[rel="canonical"]').setAttribute("href", canonicals[view]);
-  }());
-</script>
+  <script src="/app.js" defer></script>
 </body>
 </html>
