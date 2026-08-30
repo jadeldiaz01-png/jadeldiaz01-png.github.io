@@ -26,34 +26,38 @@ jobs:
           set -euo pipefail
           tmp=$(mktemp -d)
           git clone --depth=1 https://github.com/jadeldiaz01-png/jadeltechrd.com.git "$tmp/source"
-          for file in index.html styles.css app.js; do
+          for file in index.html styles.css app.js robots.txt sitemap.xml; do
             test -s "$tmp/source/$file"
             cp "$tmp/source/$file" "$file"
           done
           test "$(tr -d '\r\n' < CNAME)" = 'jadeltechrd.com'
-          echo 'Canonical site files synchronized; CNAME preserved.'
+          echo 'Canonical site + SEO discovery files synchronized; CNAME preserved.'
 
-      - name: Validate required public views before commit
+      - name: Validate required public views and metadata before commit
         shell: bash
         run: |
           set -euo pipefail
-          grep -Fq 'Jadel Tech RD' index.html
+          grep -Fq 'Agentes de IA & Automatización | Jadel Tech RD' index.html
+          grep -Fq 'property="og:title"' index.html
           grep -Fq 'data-deletion' app.js
           grep -Fq 'privacy' app.js
           grep -Fq 'terms' app.js
+          grep -Fq 'Sitemap: https://jadeltechrd.com/sitemap.xml' robots.txt
+          grep -Fq 'https://jadeltechrd.com/?view=data-deletion' sitemap.xml
           test -s styles.css
+          node --check app.js
           echo 'PUBLIC_SITE_SOURCE_VALIDATION=PASS'
 
       - name: Commit synchronized site when changed
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet -- index.html styles.css app.js; then
+          if git diff --quiet -- index.html styles.css app.js robots.txt sitemap.xml; then
             echo 'No public-site changes to commit.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add index.html styles.css app.js
+          git add index.html styles.css app.js robots.txt sitemap.xml
           git commit -m 'site: sync canonical public application'
           git push origin HEAD:main
