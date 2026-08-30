@@ -1,0 +1,59 @@
+name: Sync canonical public site
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sync-public-site.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout root Pages repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch canonical public-site files
+        shell: bash
+        run: |
+          set -euo pipefail
+          tmp=$(mktemp -d)
+          git clone --depth=1 https://github.com/jadeldiaz01-png/jadeltechrd.com.git "$tmp/source"
+          for file in index.html styles.css app.js; do
+            test -s "$tmp/source/$file"
+            cp "$tmp/source/$file" "$file"
+          done
+          test "$(tr -d '\r\n' < CNAME)" = 'jadeltechrd.com'
+          echo 'Canonical site files synchronized; CNAME preserved.'
+
+      - name: Validate required public views before commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq 'Jadel Tech RD' index.html
+          grep -Fq 'data-deletion' app.js
+          grep -Fq 'privacy' app.js
+          grep -Fq 'terms' app.js
+          test -s styles.css
+          echo 'PUBLIC_SITE_SOURCE_VALIDATION=PASS'
+
+      - name: Commit synchronized site when changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- index.html styles.css app.js; then
+            echo 'No public-site changes to commit.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html styles.css app.js
+          git commit -m 'site: sync canonical public application'
+          git push origin HEAD:main
