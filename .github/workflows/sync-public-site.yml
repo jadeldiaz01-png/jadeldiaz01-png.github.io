@@ -1,5 +1,5 @@
 name: Sync canonical public site by PR
-# Security E2E verification trigger: 2026-08-30-secret-client-id
+# Security E2E verification trigger: 2026-08-30-fixed-pem
 
 on:
   workflow_dispatch:
