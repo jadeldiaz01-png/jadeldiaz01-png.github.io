@@ -1,5 +1,5 @@
 name: Sync canonical public site by PR
-# Security E2E verification trigger: 2026-08-30-3
+# Security E2E verification trigger: 2026-08-30-secret-client-id
 
 on:
   workflow_dispatch:
@@ -91,10 +91,10 @@ jobs:
 
       - name: Generate least-privilege GitHub App token
         id: app-token
-        if: steps.changes.outputs.changed == 'true' && vars.ROOT_SYNC_APP_CLIENT_ID != ''
+        if: steps.changes.outputs.changed == 'true'
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1
         with:
-          client-id: ${{ vars.ROOT_SYNC_APP_CLIENT_ID }}
+          client-id: ${{ secrets.ROOT_SYNC_APP_CLIENT_ID }}
           private-key: ${{ secrets.ROOT_SYNC_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
           repositories: jadeldiaz01-png.github.io
