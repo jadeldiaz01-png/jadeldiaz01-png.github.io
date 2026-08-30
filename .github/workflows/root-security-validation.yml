@@ -12,6 +12,7 @@ on:
       - 'robots.txt'
       - 'sitemap.xml'
       - '.github/workflows/root-security-validation.yml'
+      - '.github/workflows/sync-public-site.yml'
   workflow_dispatch:
 
 permissions:
@@ -52,3 +53,19 @@ jobs:
           node --check app.js
           test "$(tr -d '\r\n' < CNAME)" = 'jadeltechrd.com'
           echo 'ROOT_PUBLIC_SITE_SECURITY=PASS'
+
+      - name: Require immutable third-party Actions
+        shell: bash
+        run: |
+          set -euo pipefail
+          bad=0
+          while IFS= read -r ref; do
+            [ -n "$ref" ] || continue
+            if [[ ! "$ref" =~ @[0-9a-fA-F]{40}$ ]]; then
+              echo "MUTABLE_ACTION_REFERENCE=FAIL ${ref}"
+              bad=1
+            fi
+          done < <(grep -RhoE 'uses:[[:space:]]+[^[:space:]#]+' .github/workflows | awk '{print $2}')
+          test "$bad" -eq 0
+          grep -Fq 'actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1' .github/workflows/sync-public-site.yml
+          echo 'ROOT_IMMUTABLE_ACTIONS=PASS'
