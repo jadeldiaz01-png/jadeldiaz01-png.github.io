@@ -45,7 +45,7 @@ jobs:
             echo 'DANGEROUS_JS_PRIMITIVE=FAIL'
             exit 21
           fi
-          if grep -En '(src|href)=["'"']http://' index.html; then
+          if grep -EnE "(src|href)=[\"']http://" index.html; then
             echo 'INSECURE_HTTP_RESOURCE=FAIL'
             exit 22
           fi
