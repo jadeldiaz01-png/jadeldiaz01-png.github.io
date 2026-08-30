@@ -1,4 +1,3 @@
 User-agent: *
 Allow: /
 Sitemap: https://jadeltechrd.com/sitemap.xml
-# security-e2e-canary-2
