@@ -13,6 +13,7 @@ on:
       - 'sitemap.xml'
       - '.github/workflows/root-security-validation.yml'
       - '.github/workflows/sync-public-site.yml'
+      - '.github/workflows/auto-merge-canonical-sync.yml'
   workflow_dispatch:
 
 permissions:
@@ -68,4 +69,21 @@ jobs:
           done < <(grep -RhoE 'uses:[[:space:]]+[^[:space:]#]+' .github/workflows | awk '{print $2}')
           test "$bad" -eq 0
           grep -Fq 'actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1' .github/workflows/sync-public-site.yml
+          grep -Fq 'actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1' .github/workflows/auto-merge-canonical-sync.yml
           echo 'ROOT_IMMUTABLE_ACTIONS=PASS'
+
+      - name: Validate protected App auto-merge contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s .github/workflows/auto-merge-canonical-sync.yml
+          grep -Fq "github.event.workflow_run.conclusion == 'success'" .github/workflows/auto-merge-canonical-sync.yml
+          grep -Fq "github.event.workflow_run.event == 'pull_request'" .github/workflows/auto-merge-canonical-sync.yml
+          grep -Fq "github.event.workflow_run.head_branch == 'automation/canonical-site-sync'" .github/workflows/auto-merge-canonical-sync.yml
+          grep -Fq 'github.event.workflow_run.head_repository.full_name == github.repository' .github/workflows/auto-merge-canonical-sync.yml
+          grep -Fq 'permission-contents: write' .github/workflows/auto-merge-canonical-sync.yml
+          grep -Fq 'permission-pull-requests: write' .github/workflows/auto-merge-canonical-sync.yml
+          grep -Fq 'expected_author="${APP_SLUG}[bot]"' .github/workflows/auto-merge-canonical-sync.yml
+          grep -Fq -- "-f merge_method='squash'" .github/workflows/auto-merge-canonical-sync.yml
+          grep -Fq 'POST_MERGE_SIGNATURE=PASS' .github/workflows/auto-merge-canonical-sync.yml
+          echo 'ROOT_APP_AUTOMERGE_CONTRACT=PASS'
