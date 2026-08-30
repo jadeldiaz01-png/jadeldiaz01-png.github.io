@@ -84,6 +84,6 @@ jobs:
           grep -Fq 'permission-contents: write' .github/workflows/auto-merge-canonical-sync.yml
           grep -Fq 'permission-pull-requests: write' .github/workflows/auto-merge-canonical-sync.yml
           grep -Fq 'expected_author="${APP_SLUG}[bot]"' .github/workflows/auto-merge-canonical-sync.yml
-          grep -Fq "-f merge_method='squash'" .github/workflows/auto-merge-canonical-sync.yml
+          grep -Fq -- "-f merge_method='squash'" .github/workflows/auto-merge-canonical-sync.yml
           grep -Fq 'POST_MERGE_SIGNATURE=PASS' .github/workflows/auto-merge-canonical-sync.yml
           echo 'ROOT_APP_AUTOMERGE_CONTRACT=PASS'
