@@ -1,7 +1,9 @@
-name: Sync canonical public site
+name: Sync canonical public site by PR
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
   push:
     branches: [main]
     paths:
@@ -9,31 +11,48 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
+
+concurrency:
+  group: canonical-public-site-sync
+  cancel-in-progress: false
+
+env:
+  SYNC_BRANCH: automation/canonical-site-sync
+  ROOT_REPOSITORY: jadeldiaz01-png/jadeldiaz01-png.github.io
+  CANONICAL_REPOSITORY: jadeldiaz01-png/jadeltechrd.com
 
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - name: Checkout root Pages repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           fetch-depth: 0
 
+      - name: Prepare isolated synchronization branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git switch -C "$SYNC_BRANCH" origin/main
+
       - name: Fetch canonical public-site files
         shell: bash
         run: |
           set -euo pipefail
           tmp=$(mktemp -d)
-          git clone --depth=1 https://github.com/jadeldiaz01-png/jadeltechrd.com.git "$tmp/source"
+          git clone --depth=1 "https://github.com/${CANONICAL_REPOSITORY}.git" "$tmp/source"
           for file in index.html styles.css app.js robots.txt sitemap.xml; do
             test -s "$tmp/source/$file"
             cp "$tmp/source/$file" "$file"
           done
           test "$(tr -d '\r\n' < CNAME)" = 'jadeltechrd.com'
-          echo 'Canonical site + SEO discovery files synchronized; CNAME preserved.'
+          echo 'Canonical site + SEO discovery files staged on isolated branch; CNAME preserved.'
 
-      - name: Validate required public views, metadata and security baseline before commit
+      - name: Validate required public views, metadata and security baseline
         shell: bash
         run: |
           set -euo pipefail
@@ -56,16 +75,67 @@ jobs:
           node --check app.js
           echo 'PUBLIC_SITE_SECURITY_SOURCE_VALIDATION=PASS'
 
-      - name: Commit synchronized site when changed
+      - name: Detect synchronized changes
+        id: changes
         shell: bash
         run: |
           set -euo pipefail
           if git diff --quiet -- index.html styles.css app.js robots.txt sitemap.xml; then
-            echo 'No public-site changes to commit.'
-            exit 0
+            echo 'changed=false' >> "$GITHUB_OUTPUT"
+            echo 'CANONICAL_SYNC_REQUIRED=NO'
+          else
+            echo 'changed=true' >> "$GITHUB_OUTPUT"
+            echo 'CANONICAL_SYNC_REQUIRED=YES'
           fi
+
+      - name: Commit and publish synchronization branch
+        if: steps.changes.outputs.changed == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html styles.css app.js robots.txt sitemap.xml
           git commit -m 'site: sync canonical public application'
-          git push origin HEAD:main
+          git push --force-with-lease origin "HEAD:${SYNC_BRANCH}"
+          echo 'SYNC_BRANCH_PUBLISHED=PASS'
+
+      - name: Select least-privilege PR credential
+        if: steps.changes.outputs.changed == 'true'
+        shell: bash
+        env:
+          ROOT_SYNC_PR_TOKEN: ${{ secrets.ROOT_SYNC_PR_TOKEN }}
+          BUILTIN_GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if [ -n "${ROOT_SYNC_PR_TOKEN:-}" ]; then
+            echo "::add-mask::${ROOT_SYNC_PR_TOKEN}"
+            printf 'GH_TOKEN=%s\n' "$ROOT_SYNC_PR_TOKEN" >> "$GITHUB_ENV"
+            echo 'SYNC_PR_TOKEN_SOURCE=ROOT_SYNC_PR_TOKEN'
+          else
+            printf 'GH_TOKEN=%s\n' "$BUILTIN_GITHUB_TOKEN" >> "$GITHUB_ENV"
+            echo 'SYNC_PR_TOKEN_SOURCE=GITHUB_TOKEN_FALLBACK'
+            echo 'SYNC_PR_AUTONOMY_NOTE=GitHub may require repository permission or workflow approval for PR-created CI.'
+          fi
+
+      - name: Create or update synchronization pull request
+        if: steps.changes.outputs.changed == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          existing=$(gh pr list --repo "$ROOT_REPOSITORY" --base main --head "$SYNC_BRANCH" --state open --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            gh pr edit "$existing" --repo "$ROOT_REPOSITORY" \
+              --title 'site: synchronize canonical public application' \
+              --body $'Automated synchronization from the canonical Jadel Tech RD repository.\n\nSecurity contract:\n- no direct push to main\n- root-public-site-validation must pass\n- human/ruleset merge policy remains authoritative\n- CNAME is preserved\n'
+            echo "SYNC_PR_UPDATED=${existing}"
+          else
+            if ! gh pr create --repo "$ROOT_REPOSITORY" --base main --head "$SYNC_BRANCH" \
+              --title 'site: synchronize canonical public application' \
+              --body $'Automated synchronization from the canonical Jadel Tech RD repository.\n\nSecurity contract:\n- no direct push to main\n- root-public-site-validation must pass\n- human/ruleset merge policy remains authoritative\n- CNAME is preserved\n'; then
+              echo 'SYNC_PR_CREATE=BLOCKED'
+              echo 'The synchronization branch remains available; configure a least-privilege ROOT_SYNC_PR_TOKEN or allow Actions PR creation before retrying.'
+              exit 30
+            fi
+            echo 'SYNC_PR_CREATED=PASS'
+          fi
