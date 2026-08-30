@@ -38,6 +38,9 @@ jobs:
         run: |
           set -euo pipefail
           grep -Fq 'Agentes de IA & Automatización | Jadel Tech RD' index.html
+          grep -Fq 'static-commercial-fallback' index.html
+          grep -Fq 'Agentes de IA que' index.html
+          grep -Fq 'CineForge · Video Premium' index.html
           grep -Fq 'property="og:title"' index.html
           grep -Fq 'data-deletion' app.js
           grep -Fq 'privacy' app.js
