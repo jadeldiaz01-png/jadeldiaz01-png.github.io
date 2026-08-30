@@ -1,4 +1,5 @@
 name: Sync canonical public site by PR
+# Security E2E canary trigger: 2026-08-30
 
 on:
   workflow_dispatch:
