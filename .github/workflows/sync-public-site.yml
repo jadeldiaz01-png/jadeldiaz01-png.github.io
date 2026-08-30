@@ -33,7 +33,7 @@ jobs:
           test "$(tr -d '\r\n' < CNAME)" = 'jadeltechrd.com'
           echo 'Canonical site + SEO discovery files synchronized; CNAME preserved.'
 
-      - name: Validate required public views and metadata before commit
+      - name: Validate required public views, metadata and security baseline before commit
         shell: bash
         run: |
           set -euo pipefail
@@ -42,6 +42,11 @@ jobs:
           grep -Fq 'Agentes de IA que' index.html
           grep -Fq 'CineForge · Video Premium' index.html
           grep -Fq 'property="og:title"' index.html
+          grep -Fq 'http-equiv="Content-Security-Policy"' index.html
+          grep -Fq "default-src 'none'" index.html
+          grep -Fq "script-src 'self'" index.html
+          grep -Fq "object-src 'none'" index.html
+          grep -Fq 'strict-origin-when-cross-origin' index.html
           grep -Fq 'data-deletion' app.js
           grep -Fq 'privacy' app.js
           grep -Fq 'terms' app.js
@@ -49,7 +54,7 @@ jobs:
           grep -Fq 'https://jadeltechrd.com/?view=data-deletion' sitemap.xml
           test -s styles.css
           node --check app.js
-          echo 'PUBLIC_SITE_SOURCE_VALIDATION=PASS'
+          echo 'PUBLIC_SITE_SECURITY_SOURCE_VALIDATION=PASS'
 
       - name: Commit synchronized site when changed
         shell: bash
