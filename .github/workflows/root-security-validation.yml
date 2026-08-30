@@ -1,0 +1,54 @@
+name: Root Pages security validation
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'app.js'
+      - 'styles.css'
+      - 'robots.txt'
+      - 'sitemap.xml'
+      - '.github/workflows/root-security-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  root-public-site-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout immutable revision
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+
+      - name: Validate public-site security contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s index.html
+          test -s app.js
+          test -s styles.css
+          grep -Fq 'Content-Security-Policy' index.html
+          grep -Fq "default-src 'none'" index.html
+          grep -Fq "script-src 'self'" index.html
+          grep -Fq "object-src 'none'" index.html
+          grep -Fq 'strict-origin-when-cross-origin' index.html
+          if grep -Eqi '<[^>]+on(load|error|click|mouseover|focus|submit)[[:space:]]*=' index.html; then
+            echo 'INLINE_EVENT_HANDLER=FAIL'
+            exit 20
+          fi
+          if grep -En '\beval[[:space:]]*\(|new[[:space:]]+Function[[:space:]]*\(|document\.write[[:space:]]*\(' app.js; then
+            echo 'DANGEROUS_JS_PRIMITIVE=FAIL'
+            exit 21
+          fi
+          if grep -En '(src|href)=["'"']http://' index.html; then
+            echo 'INSECURE_HTTP_RESOURCE=FAIL'
+            exit 22
+          fi
+          node --check app.js
+          test "$(tr -d '\r\n' < CNAME)" = 'jadeltechrd.com'
+          echo 'ROOT_PUBLIC_SITE_SECURITY=PASS'
