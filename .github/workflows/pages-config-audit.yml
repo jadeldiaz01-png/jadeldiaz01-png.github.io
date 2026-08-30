@@ -1,0 +1,50 @@
+name: Audit root GitHub Pages configuration
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/pages-config-audit.yml'
+
+permissions:
+  contents: read
+  pages: read
+
+jobs:
+  audit-pages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Read Pages configuration and health
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          pages=$(curl --fail-with-body --silent --show-error \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2026-03-10' \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages")
+          jq '{status,cname,html_url,public,build_type,pending_domain_unverified_at,protected_domain_state,https_enforced,https_certificate}' <<<"$pages"
+          cname=$(jq -r '.cname // empty' <<<"$pages")
+          if [ "$cname" = 'jadeltechrd.com' ]; then
+            echo 'PAGES_CUSTOM_DOMAIN=PASS'
+          else
+            echo "PAGES_CUSTOM_DOMAIN=FAIL current=${cname:-<none>}" >&2
+            exit 2
+          fi
+
+          health_tmp=$(mktemp)
+          health_code=$(curl --silent --show-error -o "$health_tmp" -w '%{http_code}' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2026-03-10' \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages/health" || true)
+          echo "pages_health_http=${health_code}"
+          if [ "$health_code" = '200' ]; then
+            jq '{domain,alt_domain}' "$health_tmp"
+          else
+            cat "$health_tmp"
+          fi
