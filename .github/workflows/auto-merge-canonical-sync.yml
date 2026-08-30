@@ -1,0 +1,117 @@
+name: Auto-merge canonical sync with GitHub App
+
+on:
+  workflow_run:
+    workflows: ['Root Pages security validation']
+    types: [completed]
+
+permissions:
+  contents: read
+
+jobs:
+  merge-canonical-sync:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.head_branch == 'automation/canonical-site-sync' &&
+      github.event.workflow_run.head_repository.full_name == github.repository &&
+      vars.ROOT_SYNC_APP_CLIENT_ID != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Generate least-privilege GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1
+        with:
+          client-id: ${{ vars.ROOT_SYNC_APP_CLIENT_ID }}
+          private-key: ${{ secrets.ROOT_SYNC_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: jadeldiaz01-png.github.io
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Validate exact synchronization PR and App authorship
+        id: pr
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
+          EXPECTED_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          ROOT_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          expected_author="${APP_SLUG}[bot]"
+          pr_json=$(gh pr list --repo "$ROOT_REPOSITORY" \
+            --base main \
+            --head automation/canonical-site-sync \
+            --state open \
+            --json number,headRefOid,author,isDraft \
+            --limit 2)
+          count=$(jq 'length' <<<"$pr_json")
+          test "$count" -eq 1 || {
+            echo "SYNC_AUTOMERGE=FAIL expected exactly one open sync PR, got ${count}"
+            exit 40
+          }
+          number=$(jq -r '.[0].number' <<<"$pr_json")
+          head_sha=$(jq -r '.[0].headRefOid' <<<"$pr_json")
+          author=$(jq -r '.[0].author.login' <<<"$pr_json")
+          draft=$(jq -r '.[0].isDraft' <<<"$pr_json")
+          test "$head_sha" = "$EXPECTED_HEAD_SHA" || {
+            echo "SYNC_AUTOMERGE=FAIL head SHA mismatch"
+            exit 41
+          }
+          test "$author" = "$expected_author" || {
+            echo "SYNC_AUTOMERGE=FAIL unexpected PR author ${author}; expected ${expected_author}"
+            exit 42
+          }
+          test "$draft" = false || {
+            echo 'SYNC_AUTOMERGE=FAIL PR is draft'
+            exit 43
+          }
+          echo "number=$number" >> "$GITHUB_OUTPUT"
+          echo "head_sha=$head_sha" >> "$GITHUB_OUTPUT"
+          echo "SYNC_PR_IDENTITY=PASS pr=${number} author=${author} sha=${head_sha}"
+
+      - name: Squash merge as the PR-author GitHub App
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          ROOT_REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+          EXPECTED_HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
+        run: |
+          set -euo pipefail
+          result=$(gh api --method PUT \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2026-03-10' \
+            "/repos/${ROOT_REPOSITORY}/pulls/${PR_NUMBER}/merge" \
+            -f merge_method='squash' \
+            -f sha="$EXPECTED_HEAD_SHA")
+          test "$(jq -r '.merged' <<<"$result")" = true || {
+            echo "$result"
+            echo 'SYNC_AUTOMERGE=FAIL merge rejected by GitHub/ruleset'
+            exit 44
+          }
+          merge_sha=$(jq -r '.sha' <<<"$result")
+          echo "SYNC_AUTOMERGE=PASS sha=${merge_sha}"
+
+      - name: Require verified protected main after merge
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          ROOT_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          sleep 2
+          commit=$(gh api \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2026-03-10' \
+            "/repos/${ROOT_REPOSITORY}/commits/main")
+          verified=$(jq -r '.commit.verification.verified' <<<"$commit")
+          reason=$(jq -r '.commit.verification.reason' <<<"$commit")
+          sha=$(jq -r '.sha' <<<"$commit")
+          test "$verified" = true || {
+            echo "POST_MERGE_SIGNATURE=FAIL sha=${sha} reason=${reason}"
+            exit 45
+          }
+          echo "POST_MERGE_SIGNATURE=PASS sha=${sha} reason=${reason}"
