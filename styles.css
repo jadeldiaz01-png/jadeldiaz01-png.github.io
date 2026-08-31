@@ -394,6 +394,37 @@ h1, h2, h3 {
 .pricing-card li::before { content: "✓"; margin-right: .5rem; color: var(--accent); }
 .pricing-card .button { margin-top: auto; }
 
+.payment-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 310px;
+  gap: 2rem;
+  align-items: center;
+  padding: clamp(1.5rem, 4vw, 2.6rem);
+  border: 1px solid rgba(116,192,252,.22);
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(116,192,252,.12), transparent 34%),
+    linear-gradient(135deg, rgba(255,255,255,.045), rgba(255,255,255,.018));
+}
+.payment-panel h2 {
+  margin: .55rem 0 1rem;
+  font-size: clamp(2rem, 4.5vw, 3.8rem);
+  max-width: 14ch;
+}
+.payment-panel p {
+  margin: 0;
+  color: var(--muted);
+  max-width: 66ch;
+}
+.payment-actions {
+  display: grid;
+  gap: .75rem;
+}
+.payment-actions span {
+  color: var(--muted-2);
+  font-size: .72rem;
+}
+
 .governance-panel { display: grid; grid-template-columns: .92fr 1.08fr; gap: 2.2rem; padding: clamp(1.5rem, 4vw, 2.8rem); border: 1px solid rgba(177,151,252,.18); border-radius: 26px; background: radial-gradient(circle at 10% 0%, rgba(177,151,252,.11), transparent 34%), linear-gradient(135deg, rgba(255,255,255,.04), rgba(255,255,255,.015)); }
 .governance-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: .8rem; }
 .governance-grid > div { min-height: 118px; display: grid; align-content: center; padding: 1rem; border: 1px solid rgba(255,255,255,.08); border-radius: 14px; background: rgba(3,5,10,.28); }
@@ -478,6 +509,7 @@ h1, h2, h3 {
   .signal-strip { grid-template-columns: repeat(2, 1fr); }
   .section-heading { grid-template-columns: 1fr; align-items: start; }
   .services-grid, .pricing-grid, .governance-panel, .configurator, .final-cta { grid-template-columns: 1fr; }
+  .payment-panel { grid-template-columns: 1fr; }
   .estimate-card { position: static; }
   .governance-grid { grid-template-columns: repeat(2, 1fr); }
   .final-cta .actions { justify-content: flex-start; }
