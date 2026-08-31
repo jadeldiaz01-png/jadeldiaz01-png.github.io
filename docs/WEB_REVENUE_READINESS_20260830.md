@@ -35,6 +35,17 @@ PayPal receiving account authorized by owner: `darklife_jadel@hotmail.com`.
 
 Current implementation opens PayPal and instructs customers to confirm scope first. This avoids an unsafe custom checkout and avoids pretending a verified hosted PayPal link exists.
 
+## 2026-08-31 Nexus automation update
+
+The public site now exposes the full launch service catalog requested by the owner and connects the configurator to a Nexus-style request flow:
+
+- Service selection builds a scoped commercial brief.
+- The payment request CTA remains disabled until at least one service is selected.
+- The generated request uses PayPal as the authorized payment method.
+- `nexus_ai_automation_v0.3.0` is represented as the operating protocol for intake, evidence, reconciliation and supervised activation.
+
+Local Nexus evidence keeps PayPal in `reconciliation_only` mode. Therefore, the website must not create payments, payouts, withdrawals, proposals, contract acceptance, social publishing, trading actions or production agent execution without human approval and a verified official connector.
+
 Recommended next payment upgrade:
 
 1. Create an official PayPal Payment Link, Button, or PayPal.Me URL inside PayPal.
@@ -46,6 +57,8 @@ Recommended next payment upgrade:
 
 - GitHub Pages custom domains require repository Pages configuration plus DNS records for the apex domain and optional `www`; DNS propagation can take up to 24 hours. Source: https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site
 - PayPal recommends Payment Links and Buttons for no-code online payment acceptance. Source: https://developer.paypal.com/payment-links-buttons/overview
+- PayPal Payment Links API requires PayPal Developer app credentials and should be implemented only behind a backend with secret management. Source: https://developer.paypal.com/api/payment-links-buttons/
+- PayPal JS SDK v6 requires client/server integration credentials for advanced checkout surfaces. Source: https://developer.paypal.com/sdk/js/set-up/
 - PayPal.Me lets customers send money through a PayPal.Me link without sharing email, but the handle must be created and verified by the account owner. Source: https://www.paypal.com/us/cshelp/article/paypalme-frequently-asked-questions-help432
 
 ## Open production gate
