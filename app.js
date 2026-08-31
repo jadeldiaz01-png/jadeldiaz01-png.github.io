@@ -1,5 +1,8 @@
 (() => {
   const DATA_DELETION_URL = "/?view=data-deletion";
+  const CONTACT_EMAIL = "darklife_jadel@hotmail.com";
+  const PAYPAL_PAYMENT_URL = "https://www.paypal.com/";
+  const NEXUS_AGENT = "nexus_ai_automation_v0.3.0";
 
   const services = [
     {
@@ -283,6 +286,7 @@
             <div class="estimate-row"><span>Soporte mensual</span><strong id="estimate-monthly">US$0</strong></div>
             <div class="estimate-note">Rango recomendado final: ±25% según integraciones, volumen y controles requeridos.</div>
             <button class="button primary full" type="button" id="copy-brief" disabled>Copiar brief de proyecto</button>
+            <a class="button secondary full is-disabled" href="#pagos" id="request-payment" aria-disabled="true">Solicitar alcance y pago</a>
             <span class="copy-feedback" id="copy-feedback" role="status"></span>
           </aside>
         </div>
@@ -329,13 +333,19 @@
           <div>
             <div class="eyebrow">Pagos</div>
             <h2>Contrata con PayPal y alcance confirmado.</h2>
-            <p>Cuenta PayPal autorizada por el propietario: <strong>darklife_jadel@hotmail.com</strong>. Antes de enviar fondos, confirma alcance, moneda, entregables y fecha estimada de entrega.</p>
+            <p>Cuenta PayPal autorizada por el propietario: <strong>${CONTACT_EMAIL}</strong>. Antes de enviar fondos, confirma alcance, moneda, entregables y fecha estimada de entrega.</p>
           </div>
           <div class="payment-actions">
-            <a class="button primary full" href="https://www.paypal.com/" rel="noopener noreferrer">Abrir PayPal</a>
-            <a class="button secondary full" href="mailto:darklife_jadel@hotmail.com?subject=Solicitud%20Jadel%20Tech%20RD&body=Hola%20Jadel%20Tech%20RD%2C%20quiero%20confirmar%20alcance%20y%20pago%20por%20PayPal.">Confirmar alcance</a>
-            <span>Recomendado: reemplazar este acceso por un PayPal Payment Link o PayPal.Me verificado.</span>
+            <a class="button primary full" href="${PAYPAL_PAYMENT_URL}" rel="noopener noreferrer">Abrir PayPal</a>
+            <a class="button secondary full" href="mailto:${CONTACT_EMAIL}?subject=Solicitud%20Jadel%20Tech%20RD&body=Hola%20Jadel%20Tech%20RD%2C%20quiero%20confirmar%20alcance%20y%20pago%20por%20PayPal.">Confirmar alcance</a>
+            <span>Formato Nexus: solicitud aprobada, pago PayPal, evidencia de pago, reconciliación y activación supervisada.</span>
           </div>
+        </div>
+        <div class="nexus-payment-protocol reveal" aria-label="Protocolo operativo Nexus">
+          <div><span>AUTO</span><strong>Selección y brief</strong><small>el configurador arma alcance, precio inicial y servicios.</small></div>
+          <div><span>HITL</span><strong>Confirmación humana</strong><small>alcance y entregables se aprueban antes del pago.</small></div>
+          <div><span>PAY</span><strong>PayPal</strong><small>pago manual o link oficial verificado cuando esté disponible.</small></div>
+          <div><span>OPS</span><strong>${NEXUS_AGENT}</strong><small>seguimiento, evidencias y operación con gates de seguridad.</small></div>
         </div>
       </section>
 
@@ -409,8 +419,8 @@
       <p>La solicitud debe identificar la aplicación utilizada y aportar únicamente la información mínima necesaria para localizar la cuenta o registro correspondiente. Podremos pedir una verificación razonable de identidad para evitar eliminaciones fraudulentas o no autorizadas.</p>
       <h2>3. Qué ocurre después</h2>
       <p>Una vez validada la solicitud, eliminaremos o anonimizaremos los datos que podamos borrar de acuerdo con la legislación, obligaciones contractuales y controles de seguridad aplicables. Algunos registros podrán conservarse cuando exista una obligación legal, contable, de seguridad, prevención de fraude o resolución de disputas.</p>
-      <h2>4. Estado del canal de contacto</h2>
-      <p>El canal público de privacidad todavía no ha sido publicado en este sitio. Hasta que se configure una dirección real y verificada, esta página funciona como las instrucciones públicas de eliminación, pero no debe considerarse un mecanismo de recepción de solicitudes.</p>
+      <h2>4. Canal de contacto</h2>
+      <p>Para solicitudes de eliminación de datos, soporte o privacidad: <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>. No envíes contraseñas, tokens ni secretos por correo.</p>
       <h2>5. URL pública de estas instrucciones</h2>
       <p><code>https://jadeltechrd.com/?view=data-deletion</code></p>`;
     main.appendChild(article);
@@ -525,7 +535,23 @@
     const setupOutput = document.getElementById("estimate-setup");
     const monthlyOutput = document.getElementById("estimate-monthly");
     const copyButton = document.getElementById("copy-brief");
+    const requestPayment = document.getElementById("request-payment");
     const feedback = document.getElementById("copy-feedback");
+
+    const buildBrief = (chosen, setup, monthly) => [
+      "Jadel Tech RD · Solicitud Nexus",
+      "",
+      `Agente operativo: ${NEXUS_AGENT}`,
+      "Formato de pago: PayPal con confirmación humana de alcance",
+      "",
+      ...chosen.map((service) => `- ${service.name} (${service.statusLabel})`),
+      "",
+      `Implementación estimada: ${formatMoney(setup)} (±25%)`,
+      `Soporte mensual estimado: ${formatMoney(monthly)} (±25%)`,
+      "",
+      "Gates: aprobación humana antes de acciones externas, pagos, publicaciones, contratos, operaciones financieras o cambios productivos.",
+      "Nota: estimación orientativa; no incluye consumo de APIs, licencias de terceros, impuestos ni requisitos extraordinarios de cumplimiento."
+    ].join("\n");
 
     const renderEstimate = () => {
       const chosen = services.filter((service) => selected.has(service.id));
@@ -534,6 +560,14 @@
       setupOutput.textContent = formatMoney(setup);
       monthlyOutput.textContent = formatMoney(monthly);
       copyButton.disabled = chosen.length === 0;
+      if (requestPayment) {
+        const disabled = chosen.length === 0;
+        requestPayment.classList.toggle("is-disabled", disabled);
+        requestPayment.setAttribute("aria-disabled", String(disabled));
+        requestPayment.href = disabled
+          ? "#pagos"
+          : `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Solicitud Nexus Jadel Tech RD")}&body=${encodeURIComponent(buildBrief(chosen, setup, monthly))}`;
+      }
       selectedContainer.innerHTML = chosen.length
         ? chosen.map((service) => `<button type="button" class="selected-chip" data-remove-service="${service.id}"><span>${service.icon}</span>${service.name}<b aria-label="Quitar">×</b></button>`).join("")
         : `<div class="empty-selection"><span>+</span><strong>Tu solución está vacía</strong><p>Añade servicios desde el catálogo para estimar implementación y soporte.</p></div>`;
@@ -577,16 +611,7 @@
       if (!chosen.length) return;
       const setup = chosen.reduce((sum, service) => sum + service.setup, 0);
       const monthly = chosen.reduce((sum, service) => sum + service.monthly, 0);
-      const brief = [
-        "Jadel Tech RD · Brief preliminar",
-        "",
-        ...chosen.map((service) => `- ${service.name} (${service.statusLabel})`),
-        "",
-        `Implementación estimada: ${formatMoney(setup)} (±25%)`,
-        `Soporte mensual estimado: ${formatMoney(monthly)} (±25%)`,
-        "",
-        "Nota: estimación orientativa; no incluye consumo de APIs, licencias de terceros, impuestos ni requisitos extraordinarios de cumplimiento."
-      ].join("\n");
+      const brief = buildBrief(chosen, setup, monthly);
       try {
         await navigator.clipboard.writeText(brief);
         feedback.textContent = "Brief copiado al portapapeles.";
