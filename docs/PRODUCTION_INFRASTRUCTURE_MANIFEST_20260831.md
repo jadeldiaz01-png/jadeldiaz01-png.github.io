@@ -20,10 +20,9 @@ Jadel Tech RD should evolve from a static commercial site into a gated productio
 
 ## Production blockers
 
-- No public backend endpoint is deployed for secure intake.
-- No PayPal webhook ledger exists yet.
-- No customer/admin identity boundary exists yet.
-- No production approval console exists yet.
+- P1 backend scaffold exists in the canonical repository; production deploy still requires Cloudflare runtime credentials plus PayPal/admin secrets.
+- PayPal webhook ledger schema and handler exist; reconciliation remains human-gated until provider events are matched to project scope.
+- Admin approval console exists as a bearer-token protected operator surface; customer identity is still out of scope for P1.
 - No durable job queue is connected to Nexus.
 - No service-specific fulfillment evidence is attached to completed purchases.
 - No SLO, alerting, backup/restore or incident runbook evidence exists for dynamic production services.
@@ -37,6 +36,13 @@ Jadel Tech RD should evolve from a static commercial site into a gated productio
 5. P4 Nexus queue: enqueue only approved jobs with least-privilege tool scopes and deterministic policy gates.
 6. P5 observability: export structured logs, traces, metrics, SLOs and error-budget alerts.
 7. P6 production promotion: each agent graduates only with service-specific tests, evidence, rollback and human sign-off.
+
+## Implemented P1 surfaces
+
+- `/solicitar-proyecto.html`: governed intake form that submits to `https://intake.jadeltechrd.com/api/v1/project-requests`.
+- `/approval-console.html`: noindex operator console for pending scope decisions and payment ledger review.
+- `/project-intake-bridge.js`: routes configurable service CTAs to governed intake while preserving hosted PayPal checkout links.
+- Required backend secrets: `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, `PAYPAL_WEBHOOK_ID`, `ADMIN_API_TOKEN`, `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `TURNSTILE_SECRET_KEY`.
 
 ## Fail-closed rules
 

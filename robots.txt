@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
+Disallow: /approval-console.html
 Sitemap: https://jadeltechrd.com/sitemap.xml

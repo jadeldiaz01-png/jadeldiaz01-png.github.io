@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1220">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src https://intake.jadeltechrd.com; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Approval Console | Jadel Tech RD</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/project-request.css">
+  <script type="module" src="/approval-console.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="/" aria-label="Jadel Tech RD - Inicio"><span class="brand-mark" aria-hidden="true">JT</span><span>Jadel Tech RD</span></a>
+      <nav class="nav" aria-label="Navegación principal"><a href="/">Inicio</a><a href="/solicitar-proyecto.html">Solicitar proyecto</a></nav>
+    </div>
+  </header>
+  <main id="main" class="shell request-shell">
+    <section class="request-hero">
+      <div class="eyebrow"><span class="live-dot"></span> Consola operativa</div>
+      <h1>Approvals.</h1>
+      <p class="lead">Revisión autenticada de solicitudes y pagos pendientes. Esta consola no guarda tokens y no ejecuta pagos, despliegues, publicaciones ni acciones financieras.</p>
+    </section>
+    <section class="request-grid">
+      <form id="approval-auth" class="request-card">
+        <div class="eyebrow">Acceso</div>
+        <h2>Token de operador</h2>
+        <div class="form-grid">
+          <label class="full-field">Bearer token<input id="admin-token" type="password" autocomplete="off" required></label>
+        </div>
+        <button class="button primary full" type="submit">Cargar pendientes</button>
+        <p id="approval-status" class="request-status" role="status" aria-live="polite"></p>
+      </form>
+      <aside class="request-card request-assurance">
+        <div class="eyebrow">Gates</div>
+        <h2>Límites activos</h2>
+        <ol>
+          <li><strong>PAYMENT</strong><span>Webhook verificado no activa fulfillment sin reconciliación humana.</span></li>
+          <li><strong>NEXUS</strong><span>Sin aprobación no hay job de producción ni acciones externas.</span></li>
+          <li><strong>AUDIT</strong><span>Cada decisión se registra como evento de aprobación.</span></li>
+        </ol>
+      </aside>
+    </section>
+    <section class="request-card approval-results" aria-live="polite">
+      <h2>Pendientes</h2>
+      <div id="approval-results"></div>
+    </section>
+  </main>
+</body>
+</html>
