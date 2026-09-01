@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1220">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://challenges.cloudflare.com; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src https://intake.jadeltechrd.com https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'none'; form-action 'none'; manifest-src 'self'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="description" content="Solicita un proyecto de agentes de IA, automatización e integraciones a Jadel Tech RD mediante un flujo protegido, auditable y supervisado.">
+  <title>Solicitar proyecto | Jadel Tech RD</title>
+  <link rel="canonical" href="https://jadeltechrd.com/solicitar-proyecto.html">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/project-request.css">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" defer></script>
+  <script type="module" src="/project-request.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="/" aria-label="Jadel Tech RD - Inicio"><span class="brand-mark" aria-hidden="true">JT</span><span>Jadel Tech RD</span></a>
+      <nav class="nav" aria-label="Navegación principal">
+        <a href="/">Inicio</a><a href="/#servicios">Servicios</a><a href="/#precios">Precios</a><a href="/?view=privacy">Privacidad</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="shell request-shell">
+    <section class="request-hero">
+      <div class="eyebrow"><span class="live-dot"></span> Intake comercial gobernado</div>
+      <h1>Solicita tu proyecto.</h1>
+      <p class="lead">La solicitud entra al runtime de Jadel Tech RD con validación, Turnstile, rate limiting, idempotencia, evidencia y workflow durable. Enviar este formulario no autoriza pagos, contratos ni acciones externas.</p>
+      <div class="hero-trust"><span>✓ Turnstile real</span><span>✓ Fail-closed</span><span>✓ Evidencia D1</span><span>✓ HITL antes de compromisos</span></div>
+    </section>
+
+    <section class="request-grid" aria-labelledby="request-title">
+      <form id="project-request-form" class="request-card" novalidate>
+        <div>
+          <div class="eyebrow">Paso 1 de 2</div>
+          <h2 id="request-title">Cuéntanos qué necesitas</h2>
+          <p>Selecciona de 1 a 8 capacidades. Los datos se usan únicamente para evaluar y responder a esta solicitud.</p>
+        </div>
+
+        <div class="form-grid">
+          <label>Nombre completo<input name="name" autocomplete="name" minlength="2" maxlength="100" required></label>
+          <label>Email<input name="email" type="email" autocomplete="email" maxlength="254" required></label>
+          <label>Empresa <span>(opcional)</span><input name="company" autocomplete="organization" maxlength="120"></label>
+          <label class="full-field">Objetivo / contexto <span>(opcional)</span><textarea name="notes" maxlength="2000" rows="5" placeholder="Describe el resultado que buscas, integraciones actuales y restricciones importantes."></textarea></label>
+        </div>
+
+        <fieldset class="service-selector">
+          <legend>Capacidades solicitadas</legend>
+          <label><input type="checkbox" name="service_ids" value="architecture"> Arquitectura Agentic & Automatización</label>
+          <label><input type="checkbox" name="service_ids" value="support"> Soporte & Tickets</label>
+          <label><input type="checkbox" name="service_ids" value="sales"> Sales & Lead Intelligence</label>
+          <label><input type="checkbox" name="service_ids" value="social"> Social Trend Intelligence</label>
+          <label><input type="checkbox" name="service_ids" value="cineforge"> CineForge · Video Premium</label>
+          <label><input type="checkbox" name="service_ids" value="meta"> Meta/Facebook Integration</label>
+          <label><input type="checkbox" name="service_ids" value="analytics"> Dashboards & Decision Intelligence</label>
+          <label><input type="checkbox" name="service_ids" value="revenue"> Revenue Opportunity Intelligence</label>
+          <label><input type="checkbox" name="service_ids" value="quant"> Quant Research & Trading Risk</label>
+          <label><input type="checkbox" name="service_ids" value="governance"> AI Governance & Production Readiness</label>
+          <label><input type="checkbox" name="service_ids" value="multiagent"> Multi-Agent Orchestration</label>
+        </fieldset>
+
+        <div class="turnstile-panel">
+          <div id="turnstile-widget" aria-label="Verificación anti-bot"></div>
+          <p id="turnstile-status" class="muted" role="status">Preparando verificación segura...</p>
+        </div>
+
+        <label class="consent-row"><input id="privacy-consent" type="checkbox" required> Acepto que Jadel Tech RD procese estos datos para evaluar y responder a mi solicitud, conforme a la <a href="/?view=privacy">Política de Privacidad</a>.</label>
+        <button class="button primary full" id="submit-project" type="submit" disabled>Enviar solicitud segura</button>
+        <p id="request-status" class="request-status" role="status" aria-live="polite"></p>
+      </form>
+
+      <aside class="request-card request-assurance">
+        <div class="eyebrow">Paso 2 de 2</div>
+        <h2>Qué ocurre después</h2>
+        <ol>
+          <li><strong>VALIDATED</strong><span>El runtime valida estructura, origen, Turnstile, límites e idempotencia.</span></li>
+          <li><strong>POLICY_CHECK</strong><span>Un workflow durable abre la revisión de política y evidencia.</span></li>
+          <li><strong>HUMAN REVIEW</strong><span>Alcance, precio, contratos, credenciales o acciones externas requieren aprobación cuando corresponda.</span></li>
+        </ol>
+        <p>La recepción del formulario no significa aceptación contractual, compromiso de gasto, publicación automática ni autorización financiera.</p>
+        <a class="button secondary full" href="/#servicios">Volver al catálogo</a>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="shell"><p>© <span id="year">2026</span> Jadel Tech RD.</p></div></footer>
+</body>
+</html>
