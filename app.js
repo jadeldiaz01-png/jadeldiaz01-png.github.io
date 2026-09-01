@@ -3,6 +3,21 @@
   const CONTACT_EMAIL = "darklife_jadel@hotmail.com";
   const PAYPAL_PAYMENT_URL = "https://www.paypal.com/";
   const NEXUS_AGENT = "nexus_ai_automation_v0.3.0";
+  const PAYMENT_LINKS = {
+    architecture: {
+      setup: "https://www.paypal.com/ncp/payment/8XFP5NDQUN9J2"
+    },
+    support: {
+      setup: "https://www.paypal.com/ncp/payment/NN639WR9P7LPW",
+      monthly: "https://www.paypal.com/ncp/payment/G7EJQLHYUKLG8"
+    },
+    meta: {
+      setup: "https://www.paypal.com/ncp/payment/5EX2AGMB85P62"
+    },
+    governance: {
+      setup: "https://www.paypal.com/ncp/payment/3TQUF8WU2WHR2"
+    }
+  };
 
   const services = [
     {
@@ -16,7 +31,8 @@
       statusLabel: "Servicio de ingeniería",
       setup: 250,
       monthly: 0,
-      priceLabel: "Desde US$250"
+      priceLabel: "Desde US$250",
+      paymentLinks: PAYMENT_LINKS.architecture
     },
     {
       id: "support",
@@ -29,7 +45,8 @@
       statusLabel: "Implementable",
       setup: 900,
       monthly: 149,
-      priceLabel: "US$900 + US$149/mes"
+      priceLabel: "US$900 + US$149/mes",
+      paymentLinks: PAYMENT_LINKS.support
     },
     {
       id: "sales",
@@ -81,7 +98,8 @@
       statusLabel: "Servicio de ingeniería",
       setup: 850,
       monthly: 0,
-      priceLabel: "Desde US$850"
+      priceLabel: "Desde US$850",
+      paymentLinks: PAYMENT_LINKS.meta
     },
     {
       id: "analytics",
@@ -133,7 +151,8 @@
       statusLabel: "Servicio de ingeniería",
       setup: 2500,
       monthly: 299,
-      priceLabel: "Desde US$2,500"
+      priceLabel: "Desde US$2,500",
+      paymentLinks: PAYMENT_LINKS.governance
     },
     {
       id: "multiagent",
@@ -167,6 +186,32 @@
     maximumFractionDigits: 0,
   }).format(value);
 
+  const paymentLabel = {
+    setup: "Pagar implementación",
+    monthly: "Pagar soporte mensual"
+  };
+
+  const servicePaymentLinks = (service) => {
+    const links = Object.entries(service.paymentLinks || {});
+    if (!links.length) return "";
+    return `
+      <div class="service-payment-links" aria-label="Pagos PayPal disponibles para ${service.name}">
+        ${links.map(([type, url]) => `<a href="${url}" rel="noopener noreferrer" target="_blank">${paymentLabel[type]}</a>`).join("")}
+      </div>`;
+  };
+
+  const paymentOptionsMarkup = () => services
+    .filter((service) => service.paymentLinks)
+    .map((service) => `
+      <article>
+        <strong>${service.name}</strong>
+        <span>${service.priceLabel}</span>
+        <div>
+          ${Object.entries(service.paymentLinks).map(([type, url]) => `<a href="${url}" rel="noopener noreferrer" target="_blank">${paymentLabel[type]}</a>`).join("")}
+        </div>
+      </article>`)
+    .join("");
+
   const serviceCard = (service) => `
     <article class="service-card reveal" data-category="${service.category}" data-service-id="${service.id}">
       <div class="service-topline">
@@ -185,6 +230,7 @@
         </div>
         <button class="mini-action" type="button" data-add-service="${service.id}" aria-pressed="false">Añadir</button>
       </div>
+      ${servicePaymentLinks(service)}
     </article>`;
 
   const homeMarkup = `
@@ -340,6 +386,9 @@
             <a class="button secondary full" href="mailto:${CONTACT_EMAIL}?subject=Solicitud%20Jadel%20Tech%20RD&body=Hola%20Jadel%20Tech%20RD%2C%20quiero%20confirmar%20alcance%20y%20pago%20por%20PayPal.">Confirmar alcance</a>
             <span>Formato Nexus: solicitud aprobada, pago PayPal, evidencia de pago, reconciliación y activación supervisada.</span>
           </div>
+        </div>
+        <div class="payment-link-grid reveal" aria-label="Enlaces PayPal oficiales por servicio">
+          ${paymentOptionsMarkup()}
         </div>
         <div class="nexus-payment-protocol reveal" aria-label="Protocolo operativo Nexus">
           <div><span>AUTO</span><strong>Selección y brief</strong><small>el configurador arma alcance, precio inicial y servicios.</small></div>
@@ -562,11 +611,18 @@
       copyButton.disabled = chosen.length === 0;
       if (requestPayment) {
         const disabled = chosen.length === 0;
+        const directCheckout = chosen.length === 1 ? chosen[0].paymentLinks?.setup : "";
         requestPayment.classList.toggle("is-disabled", disabled);
         requestPayment.setAttribute("aria-disabled", String(disabled));
-        requestPayment.href = disabled
-          ? "#pagos"
-          : `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Solicitud Nexus Jadel Tech RD")}&body=${encodeURIComponent(buildBrief(chosen, setup, monthly))}`;
+        requestPayment.textContent = directCheckout ? "Pagar servicio con PayPal" : "Solicitar alcance y pago";
+        requestPayment.href = disabled ? "#pagos" : directCheckout || `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Solicitud Nexus Jadel Tech RD")}&body=${encodeURIComponent(buildBrief(chosen, setup, monthly))}`;
+        if (directCheckout) {
+          requestPayment.setAttribute("target", "_blank");
+          requestPayment.setAttribute("rel", "noopener noreferrer");
+        } else {
+          requestPayment.removeAttribute("target");
+          requestPayment.removeAttribute("rel");
+        }
       }
       selectedContainer.innerHTML = chosen.length
         ? chosen.map((service) => `<button type="button" class="selected-chip" data-remove-service="${service.id}"><span>${service.icon}</span>${service.name}<b aria-label="Quitar">×</b></button>`).join("")

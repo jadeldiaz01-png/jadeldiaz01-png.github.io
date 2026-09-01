@@ -356,6 +356,24 @@ h1, h2, h3 {
   font-weight: 800;
 }
 .mini-action[aria-pressed="true"] { color: #04110d; background: var(--accent); }
+.service-payment-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: .85rem;
+}
+.service-payment-links a {
+  padding: .5rem .62rem;
+  border: 1px solid rgba(116,192,252,.26);
+  border-radius: .65rem;
+  color: var(--accent-2);
+  font-size: .72rem;
+  font-weight: 850;
+}
+.service-payment-links a:hover {
+  background: rgba(116,192,252,.1);
+  color: var(--text);
+}
 
 .process-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; padding: 0; margin: 0; list-style: none; counter-reset: none; }
 .process-card { min-height: 250px; padding: 1.35rem; border-top: 1px solid var(--line-strong); background: linear-gradient(180deg, rgba(255,255,255,.025), transparent 70%); }
@@ -425,6 +443,40 @@ h1, h2, h3 {
   color: var(--muted-2);
   font-size: .72rem;
 }
+.payment-link-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .85rem;
+  margin-top: 1rem;
+}
+.payment-link-grid article {
+  min-height: 142px;
+  padding: 1rem;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 14px;
+  background: rgba(255,255,255,.026);
+}
+.payment-link-grid strong,
+.payment-link-grid span {
+  display: block;
+}
+.payment-link-grid strong { font-size: .88rem; }
+.payment-link-grid span {
+  margin: .3rem 0 .7rem;
+  color: var(--muted-2);
+  font-size: .72rem;
+}
+.payment-link-grid div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+.payment-link-grid a {
+  color: var(--accent-2);
+  font-size: .72rem;
+  font-weight: 850;
+}
+.payment-link-grid a:hover { color: var(--text); }
 .nexus-payment-protocol {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -521,7 +573,7 @@ h1, h2, h3 {
   .pricing-card.featured { transform: none; }
   .process-grid { grid-template-columns: repeat(2, 1fr); }
   .benchmark-grid { grid-template-columns: repeat(2, 1fr); }
-  .nexus-payment-protocol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .payment-link-grid, .nexus-payment-protocol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 780px) {
@@ -550,7 +602,7 @@ h1, h2, h3 {
   .hero-trust { display: grid; grid-template-columns: 1fr 1fr; }
   .agent-console { min-height: 430px; border-radius: 20px; }
   .console-events > div { grid-template-columns: 44px 1fr; }
-  .signal-strip, .services-grid, .process-grid, .pricing-grid, .benchmark-grid, .governance-grid, .nexus-payment-protocol { grid-template-columns: 1fr; }
+  .signal-strip, .services-grid, .process-grid, .pricing-grid, .benchmark-grid, .governance-grid, .payment-link-grid, .nexus-payment-protocol { grid-template-columns: 1fr; }
   .signal-strip > div { min-height: 105px; }
   .service-card { min-height: 395px; }
   .section-block { padding-top: 5.5rem; }

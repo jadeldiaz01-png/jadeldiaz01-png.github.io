@@ -33,7 +33,7 @@ Jadel Tech RD can present Nexus AI Automation v0.3.0 as a governed service engin
 
 PayPal receiving account authorized by owner: `darklife_jadel@hotmail.com`.
 
-Current implementation opens PayPal and instructs customers to confirm scope first. This avoids an unsafe custom checkout and avoids pretending a verified hosted PayPal link exists.
+Current implementation uses owner-provided PayPal Payment Links for supported services and keeps scope confirmation available before payment. This avoids an unsafe custom checkout while moving supported services to PayPal-hosted checkout.
 
 ## 2026-08-31 Nexus automation update
 
@@ -41,16 +41,24 @@ The public site now exposes the full launch service catalog requested by the own
 
 - Service selection builds a scoped commercial brief.
 - The payment request CTA remains disabled until at least one service is selected.
-- The generated request uses PayPal as the authorized payment method.
+- The generated request uses PayPal as the authorized payment method. When exactly one supported service is selected, the CTA opens the official PayPal Payment Link for that service.
 - `nexus_ai_automation_v0.3.0` is represented as the operating protocol for intake, evidence, reconciliation and supervised activation.
 
-Local Nexus evidence keeps PayPal in `reconciliation_only` mode. Therefore, the website must not create payments, payouts, withdrawals, proposals, contract acceptance, social publishing, trading actions or production agent execution without human approval and a verified official connector.
+Local Nexus evidence keeps direct PayPal API execution in `reconciliation_only` mode. Therefore, the website may link to PayPal-hosted checkout pages, but must not create payments, payouts, withdrawals, proposals, contract acceptance, social publishing, trading actions or production agent execution without human approval and a verified backend connector.
+
+Owner-provided PayPal Payment Links verified with HTTP 200 before publication:
+
+- Architecture setup: `https://www.paypal.com/ncp/payment/8XFP5NDQUN9J2`
+- Support setup: `https://www.paypal.com/ncp/payment/NN639WR9P7LPW`
+- Support monthly: `https://www.paypal.com/ncp/payment/G7EJQLHYUKLG8`
+- Meta/Facebook setup: `https://www.paypal.com/ncp/payment/5EX2AGMB85P62`
+- AI Governance setup: `https://www.paypal.com/ncp/payment/3TQUF8WU2WHR2`
 
 Recommended next payment upgrade:
 
-1. Create an official PayPal Payment Link, Button, or PayPal.Me URL inside PayPal.
-2. Test a low-value transaction.
-3. Replace the generic PayPal link in `index.html` and `app.js` with the verified URL.
+1. Add official PayPal links for the remaining catalog services.
+2. Test a low-value transaction per payment link.
+3. Add a backend webhook and immutable payment ledger before automating fulfillment.
 4. Keep payment confirmation and delivery scope human-reviewed.
 
 ## External evidence used
@@ -68,5 +76,5 @@ Do not mark the site as fully automated payment-ready until:
 - `jadeltechrd.com` serves the new payment section after CDN/cache propagation.
 - `www.jadeltechrd.com` is configured or intentionally omitted.
 - GitHub Pages/CDN serves the site over HTTPS.
-- PayPal link is official and verified.
+- PayPal links are official, tested and reconciled.
 - Any Nexus admin endpoint remains private behind authentication and network controls.
