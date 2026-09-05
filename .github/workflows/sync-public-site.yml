@@ -173,6 +173,7 @@ jobs:
           else
             printf 'SYNC_WRITE_TOKEN=%s\n' "$BUILTIN_GITHUB_TOKEN" >> "$GITHUB_ENV"
             printf 'GH_TOKEN=%s\n' "$BUILTIN_GITHUB_TOKEN" >> "$GITHUB_ENV"
+            printf 'SYNC_CAN_CREATE_PR=false\n' >> "$GITHUB_ENV"
             echo 'SYNC_TOKEN_SOURCE=GITHUB_TOKEN_FALLBACK'
             echo 'SYNC_AUTONOMY_NOTE=Install or rotate the dedicated GitHub App PEM key for autonomous PR-triggered CI without broad user credentials.'
           fi
@@ -216,7 +217,7 @@ jobs:
           echo 'SYNC_BRANCH_PUBLISHED=PASS'
 
       - name: Create or update synchronization pull request
-        if: steps.changes.outputs.changed == 'true'
+        if: steps.changes.outputs.changed == 'true' && env.SYNC_CAN_CREATE_PR != 'false'
         shell: bash
         run: |
           set -euo pipefail
@@ -236,3 +237,12 @@ jobs:
             fi
             echo 'SYNC_PR_CREATED=PASS'
           fi
+
+      - name: Report synchronization branch awaiting PR credential
+        if: steps.changes.outputs.changed == 'true' && env.SYNC_CAN_CREATE_PR == 'false'
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'SYNC_BRANCH_PUBLISHED_WITHOUT_PR=PASS'
+          echo 'Root repository blocks pull requests created by the built-in GitHub Actions token.'
+          echo 'Rotate ROOT_SYNC_APP_PRIVATE_KEY or configure ROOT_SYNC_PR_TOKEN to allow automatic PR creation.'
