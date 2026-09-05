@@ -46,7 +46,18 @@ jobs:
           set -euo pipefail
           tmp=$(mktemp -d)
           git clone --depth=1 "https://github.com/${CANONICAL_REPOSITORY}.git" "$tmp/source"
-          for file in index.html styles.css app.js robots.txt sitemap.xml; do
+          for file in \
+            index.html \
+            styles.css \
+            app.js \
+            robots.txt \
+            sitemap.xml \
+            project-intake-bridge.js \
+            project-request.js \
+            project-request.css \
+            solicitar-proyecto.html \
+            approval-console.html \
+            approval-console.js; do
             test -s "$tmp/source/$file"
             cp "$tmp/source/$file" "$file"
           done
@@ -72,8 +83,16 @@ jobs:
           grep -Fq 'terms' app.js
           grep -Fq 'Sitemap: https://jadeltechrd.com/sitemap.xml' robots.txt
           grep -Fq 'https://jadeltechrd.com/?view=data-deletion' sitemap.xml
+          grep -Fq '/solicitar-proyecto.html' project-intake-bridge.js
+          grep -Fq 'id="project-request-form"' solicitar-proyecto.html
+          grep -Fq 'intake.jadeltechrd.com' project-request.js
+          grep -Fq 'noindex' approval-console.html
+          grep -Fq 'api/v1/admin/approvals' approval-console.js
           test -s styles.css
           node --check app.js
+          node --check project-intake-bridge.js
+          node --check project-request.js
+          node --check approval-console.js
           echo 'PUBLIC_SITE_SECURITY_SOURCE_VALIDATION=PASS'
 
       - name: Detect synchronized changes
@@ -81,7 +100,18 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet -- index.html styles.css app.js robots.txt sitemap.xml; then
+          if git diff --quiet -- \
+            index.html \
+            styles.css \
+            app.js \
+            robots.txt \
+            sitemap.xml \
+            project-intake-bridge.js \
+            project-request.js \
+            project-request.css \
+            solicitar-proyecto.html \
+            approval-console.html \
+            approval-console.js; then
             echo 'changed=false' >> "$GITHUB_OUTPUT"
             echo 'CANONICAL_SYNC_REQUIRED=NO'
           else
@@ -89,9 +119,28 @@ jobs:
             echo 'CANONICAL_SYNC_REQUIRED=YES'
           fi
 
+      - name: Validate optional GitHub App credentials
+        id: app-credentials
+        if: steps.changes.outputs.changed == 'true'
+        shell: bash
+        env:
+          ROOT_SYNC_APP_CLIENT_ID: ${{ secrets.ROOT_SYNC_APP_CLIENT_ID }}
+          ROOT_SYNC_APP_PRIVATE_KEY: ${{ secrets.ROOT_SYNC_APP_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -n "${ROOT_SYNC_APP_CLIENT_ID:-}" ] &&
+             grep -q 'BEGIN .*PRIVATE KEY' <<<"${ROOT_SYNC_APP_PRIVATE_KEY:-}" &&
+             grep -q 'END .*PRIVATE KEY' <<<"${ROOT_SYNC_APP_PRIVATE_KEY:-}"; then
+            echo 'usable=true' >> "$GITHUB_OUTPUT"
+            echo 'SYNC_APP_CREDENTIALS=USABLE'
+          else
+            echo 'usable=false' >> "$GITHUB_OUTPUT"
+            echo 'SYNC_APP_CREDENTIALS=UNAVAILABLE_OR_INVALID'
+          fi
+
       - name: Generate least-privilege GitHub App token
         id: app-token
-        if: steps.changes.outputs.changed == 'true'
+        if: steps.app-credentials.outputs.usable == 'true'
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1
         with:
           client-id: ${{ secrets.ROOT_SYNC_APP_CLIENT_ID }}
@@ -125,7 +174,7 @@ jobs:
             printf 'SYNC_WRITE_TOKEN=%s\n' "$BUILTIN_GITHUB_TOKEN" >> "$GITHUB_ENV"
             printf 'GH_TOKEN=%s\n' "$BUILTIN_GITHUB_TOKEN" >> "$GITHUB_ENV"
             echo 'SYNC_TOKEN_SOURCE=GITHUB_TOKEN_FALLBACK'
-            echo 'SYNC_AUTONOMY_NOTE=Install the dedicated GitHub App for autonomous PR-triggered CI without broad user credentials.'
+            echo 'SYNC_AUTONOMY_NOTE=Install or rotate the dedicated GitHub App PEM key for autonomous PR-triggered CI without broad user credentials.'
           fi
 
       - name: Configure synchronization actor
@@ -149,7 +198,18 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git add index.html styles.css app.js robots.txt sitemap.xml
+          git add \
+            index.html \
+            styles.css \
+            app.js \
+            robots.txt \
+            sitemap.xml \
+            project-intake-bridge.js \
+            project-request.js \
+            project-request.css \
+            solicitar-proyecto.html \
+            approval-console.html \
+            approval-console.js
           git commit -m 'site: sync canonical public application'
           git remote set-url origin "https://x-access-token:${SYNC_WRITE_TOKEN}@github.com/${ROOT_REPOSITORY}.git"
           git push --force-with-lease origin "HEAD:${SYNC_BRANCH}"
