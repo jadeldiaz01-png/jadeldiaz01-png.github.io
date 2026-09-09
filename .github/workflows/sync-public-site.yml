@@ -61,8 +61,9 @@ jobs:
             test -s "$tmp/source/$file"
             cp "$tmp/source/$file" "$file"
           done
+          printf 'jadeltechrd.com\n' > CNAME
           test "$(tr -d '\r\n' < CNAME)" = 'jadeltechrd.com'
-          echo 'Canonical site + SEO discovery files staged on isolated branch; CNAME preserved.'
+          echo 'Canonical site + SEO discovery files staged on isolated branch; root CNAME asserted.'
 
       - name: Validate required public views, metadata and security baseline
         shell: bash
@@ -111,7 +112,8 @@ jobs:
             project-request.css \
             solicitar-proyecto.html \
             approval-console.html \
-            approval-console.js; then
+            approval-console.js \
+            CNAME; then
             echo 'changed=false' >> "$GITHUB_OUTPUT"
             echo 'CANONICAL_SYNC_REQUIRED=NO'
           else
@@ -210,7 +212,8 @@ jobs:
             project-request.css \
             solicitar-proyecto.html \
             approval-console.html \
-            approval-console.js
+            approval-console.js \
+            CNAME
           git commit -m 'site: sync canonical public application'
           git remote set-url origin "https://x-access-token:${SYNC_WRITE_TOKEN}@github.com/${ROOT_REPOSITORY}.git"
           git push --force-with-lease origin "HEAD:${SYNC_BRANCH}"
