@@ -1,5 +1,8 @@
 (() => {
   const DATA_DELETION_URL = "/?view=data-deletion";
+  const INTAKE_PATH = "/solicitar-proyecto.html";
+  const SERVICE_ID_PATTERN = /^[a-z0-9-]{1,64}$/;
+  const MAX_INTAKE_SERVICES = 8;
   const CONTACT_EMAIL = "darklife_jadel@hotmail.com";
   const PAYPAL_PAYMENT_URL = "https://www.paypal.com/";
   const NEXUS_AGENT = "nexus_ai_automation_v0.3.0";
@@ -186,6 +189,15 @@
     maximumFractionDigits: 0,
   }).format(value);
 
+  const governedIntakeUrl = (ids) => {
+    const safeIds = [...new Set(ids)]
+      .filter((id) => SERVICE_ID_PATTERN.test(id || ""))
+      .slice(0, MAX_INTAKE_SERVICES);
+    if (!safeIds.length) return INTAKE_PATH;
+    const params = new URLSearchParams({ services: safeIds.join(",") });
+    return `${INTAKE_PATH}?${params.toString()}`;
+  };
+
   const paymentLabel = {
     setup: "Pagar implementación",
     monthly: "Pagar soporte mensual"
@@ -341,7 +353,7 @@
       <section class="section-block pricing-section" id="precios">
         <div class="section-heading reveal">
           <div>
-            <div class="eyebrow">Paquetes de lanzamiento</div>
+          <div class="eyebrow">Paquetes de lanzamiento</div>
             <h2>Precios claros para empezar. Escala solo cuando genera valor.</h2>
           </div>
           <p>Posicionamiento entre herramientas self-service y consultoría enterprise: más implementación que un SaaS genérico, sin empezar en tickets de US$10k para cada proyecto.</p>
@@ -489,6 +501,7 @@
       <a href="/#precios" data-home-nav>Precios</a>
       <a href="/#pagos" data-home-nav>Pagos</a>
       <a href="/#gobernanza" data-home-nav>Seguridad</a>
+      <a href="/solicitar-proyecto.html" data-intake-nav="true">Solicitar proyecto</a>
       <a href="/?view=privacy" data-nav="privacy">Privacidad</a>
       <a href="/?view=terms" data-nav="terms">Condiciones</a>
       <a href="${DATA_DELETION_URL}" data-nav="data-deletion">Eliminar datos</a>`;
@@ -611,18 +624,14 @@
       copyButton.disabled = chosen.length === 0;
       if (requestPayment) {
         const disabled = chosen.length === 0;
-        const directCheckout = chosen.length === 1 ? chosen[0].paymentLinks?.setup : "";
+        const ids = chosen.map((service) => service.id);
         requestPayment.classList.toggle("is-disabled", disabled);
         requestPayment.setAttribute("aria-disabled", String(disabled));
-        requestPayment.textContent = directCheckout ? "Pagar servicio con PayPal" : "Solicitar alcance y pago";
-        requestPayment.href = disabled ? "#pagos" : directCheckout || `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Solicitud Nexus Jadel Tech RD")}&body=${encodeURIComponent(buildBrief(chosen, setup, monthly))}`;
-        if (directCheckout) {
-          requestPayment.setAttribute("target", "_blank");
-          requestPayment.setAttribute("rel", "noopener noreferrer");
-        } else {
-          requestPayment.removeAttribute("target");
-          requestPayment.removeAttribute("rel");
-        }
+        requestPayment.setAttribute("data-governed-intake", "true");
+        requestPayment.textContent = disabled ? "Selecciona servicios para solicitar proyecto" : "Solicitar proyecto";
+        requestPayment.href = disabled ? "#servicios" : governedIntakeUrl(ids);
+        requestPayment.removeAttribute("target");
+        requestPayment.removeAttribute("rel");
       }
       selectedContainer.innerHTML = chosen.length
         ? chosen.map((service) => `<button type="button" class="selected-chip" data-remove-service="${service.id}"><span>${service.icon}</span>${service.name}<b aria-label="Quitar">×</b></button>`).join("")
@@ -647,6 +656,14 @@
       selected.delete(button.dataset.removeService);
       renderEstimate();
     });
+
+    requestPayment?.addEventListener("click", (event) => {
+      if (selected.size > 0) return;
+      event.preventDefault();
+      document.getElementById("servicios")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    renderEstimate();
 
     document.querySelectorAll("[data-filter]").forEach((button) => {
       button.addEventListener("click", () => {
