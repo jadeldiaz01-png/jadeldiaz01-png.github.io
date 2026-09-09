@@ -52,7 +52,6 @@ jobs:
             app.js \
             robots.txt \
             sitemap.xml \
-            project-intake-bridge.js \
             project-request.js \
             project-request.css \
             solicitar-proyecto.html \
@@ -84,14 +83,13 @@ jobs:
           grep -Fq 'terms' app.js
           grep -Fq 'Sitemap: https://jadeltechrd.com/sitemap.xml' robots.txt
           grep -Fq 'https://jadeltechrd.com/?view=data-deletion' sitemap.xml
-          grep -Fq '/solicitar-proyecto.html' project-intake-bridge.js
+          ! grep -Fq '/project-intake-bridge.js' index.html
           grep -Fq 'id="project-request-form"' solicitar-proyecto.html
           grep -Fq 'intake.jadeltechrd.com' project-request.js
           grep -Fq 'noindex' approval-console.html
           grep -Fq 'api/v1/admin/approvals' approval-console.js
           test -s styles.css
           node --check app.js
-          node --check project-intake-bridge.js
           node --check project-request.js
           node --check approval-console.js
           echo 'PUBLIC_SITE_SECURITY_SOURCE_VALIDATION=PASS'
@@ -107,7 +105,6 @@ jobs:
             app.js \
             robots.txt \
             sitemap.xml \
-            project-intake-bridge.js \
             project-request.js \
             project-request.css \
             solicitar-proyecto.html \
@@ -207,7 +204,6 @@ jobs:
             app.js \
             robots.txt \
             sitemap.xml \
-            project-intake-bridge.js \
             project-request.js \
             project-request.css \
             solicitar-proyecto.html \
