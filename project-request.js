@@ -145,7 +145,7 @@ form?.addEventListener("submit", async (event) => {
 
   submitting = true;
   updateSubmitState();
-  setStatus("Enviando solicitud de forma segura...", "working");
+  setStatus("Enviando solicitud de forma segura…", "working");
   const idempotencyKey = getIdempotencyKey();
 
   try {
