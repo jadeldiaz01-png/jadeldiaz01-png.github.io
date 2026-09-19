@@ -29,7 +29,7 @@
     <section class="request-hero">
       <div class="eyebrow"><span class="live-dot"></span> Intake comercial gobernado</div>
       <h1>Solicita tu proyecto.</h1>
-      <p class="lead">La solicitud entra al runtime de Jadel Tech RD con validación, Turnstile, rate limiting, idempotencia, evidencia y workflow durable. Enviar este formulario no autoriza pagos, contratos ni acciones externas.</p>
+      <p class="lead">La solicitud entra al runtime de Jadel Tech RD con validación, Turnstile, rate limiting, idempotencia, evidencia y workflow durable. Nexus AI Automation v0.3.0 clasifica, prepara evidencia y abre revisión humana. Enviar este formulario no autoriza pagos, contratos ni acciones externas.</p>
       <div class="hero-trust"><span>✓ Turnstile real</span><span>✓ Fail-closed</span><span>✓ Evidencia D1</span><span>✓ HITL antes de compromisos</span></div>
     </section>
 
@@ -66,6 +66,7 @@
         <div class="turnstile-panel">
           <div id="turnstile-widget" aria-label="Verificación anti-bot"></div>
           <p id="turnstile-status" class="muted" role="status">Preparando verificación segura…</p>
+          <button class="button secondary compact" id="retry-runtime" type="button" hidden>Reintentar verificación</button>
         </div>
 
         <label class="consent-row"><input id="privacy-consent" type="checkbox" required> Acepto que Jadel Tech RD procese estos datos para evaluar y responder a mi solicitud, conforme a la <a href="/?view=privacy">Política de Privacidad</a>.</label>
@@ -81,6 +82,16 @@
           <li><strong>POLICY_CHECK</strong><span>Un workflow durable abre la revisión de política y evidencia.</span></li>
           <li><strong>HUMAN REVIEW</strong><span>Alcance, precio, contratos, credenciales o acciones externas requieren aprobación cuando corresponda.</span></li>
         </ol>
+        <div class="nexus-intake-panel" aria-labelledby="nexus-intake-title">
+          <div class="eyebrow">Nexus AI Automation v0.3.0</div>
+          <h3 id="nexus-intake-title">Control permitido en este intake</h3>
+          <ul>
+            <li><strong>Clasificar</strong><span>Mapea capacidades solicitadas, urgencia operativa y dependencias técnicas.</span></li>
+            <li><strong>Preparar alcance</strong><span>Genera brief interno, evidencia y próximos pasos revisables.</span></li>
+            <li><strong>Orquestar</strong><span>Abre workflow durable, outbox y políticas de aprobación.</span></li>
+            <li><strong>Bloquear riesgo</strong><span>Pagos, contratos, credenciales, publicaciones y trading quedan cerrados hasta aprobación humana.</span></li>
+          </ul>
+        </div>
         <p>La recepción del formulario no significa aceptación contractual, compromiso de gasto, publicación automática ni autorización financiera.</p>
         <a class="button secondary full" href="/#servicios">Volver al catálogo</a>
       </aside>
