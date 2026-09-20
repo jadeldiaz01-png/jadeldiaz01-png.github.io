@@ -55,6 +55,11 @@ jobs:
             project-request.js \
             project-request.css \
             solicitar-proyecto.html \
+            ga4-config.js \
+            ga4-loader.js \
+            analytics-consent.js \
+            analytics-consent.css \
+            revenue-funnel.js \
             approval-console.html \
             approval-console.js; do
             test -s "$tmp/source/$file"
@@ -85,12 +90,19 @@ jobs:
           grep -Fq 'https://jadeltechrd.com/?view=data-deletion' sitemap.xml
           ! grep -Fq '/project-intake-bridge.js' index.html
           grep -Fq 'id="project-request-form"' solicitar-proyecto.html
+          grep -Fq 'G-K60SQ2ZHL9' ga4-config.js
+          grep -Fq 'grantAnalyticsConsent' ga4-loader.js
+          grep -Fq 'analytics-consent-panel' analytics-consent.js
           grep -Fq 'intake.jadeltechrd.com' project-request.js
           grep -Fq 'noindex' approval-console.html
           grep -Fq 'api/v1/admin/approvals' approval-console.js
           test -s styles.css
           node --check app.js
           node --check project-request.js
+          node --check ga4-config.js
+          node --check ga4-loader.js
+          node --check analytics-consent.js
+          node --check revenue-funnel.js
           node --check approval-console.js
           echo 'PUBLIC_SITE_SECURITY_SOURCE_VALIDATION=PASS'
 
@@ -108,6 +120,11 @@ jobs:
             project-request.js \
             project-request.css \
             solicitar-proyecto.html \
+            ga4-config.js \
+            ga4-loader.js \
+            analytics-consent.js \
+            analytics-consent.css \
+            revenue-funnel.js \
             approval-console.html \
             approval-console.js \
             CNAME; then
@@ -207,6 +224,11 @@ jobs:
             project-request.js \
             project-request.css \
             solicitar-proyecto.html \
+            ga4-config.js \
+            ga4-loader.js \
+            analytics-consent.js \
+            analytics-consent.css \
+            revenue-funnel.js \
             approval-console.html \
             approval-console.js \
             CNAME
