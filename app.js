@@ -599,6 +599,7 @@
     const copyButton = document.getElementById("copy-brief");
     const requestPayment = document.getElementById("request-payment");
     const feedback = document.getElementById("copy-feedback");
+    const maxSelectedServices = 8;
 
     const buildBrief = (chosen, setup, monthly) => [
       "Jadel Tech RD · Solicitud Nexus",
@@ -638,8 +639,10 @@
         : `<div class="empty-selection"><span>+</span><strong>Tu solución está vacía</strong><p>Añade servicios desde el catálogo para estimar implementación y soporte.</p></div>`;
       document.querySelectorAll("[data-add-service]").forEach((button) => {
         const active = selected.has(button.dataset.addService);
+        const limitReached = selected.size >= maxSelectedServices && !active;
         button.setAttribute("aria-pressed", String(active));
-        button.textContent = active ? "Añadido ✓" : "Añadir";
+        button.disabled = limitReached;
+        button.textContent = active ? "Añadido ✓" : limitReached ? "Máximo 8" : "Añadir";
       });
     };
 
@@ -647,7 +650,8 @@
       const button = event.target.closest("[data-add-service]");
       if (!button) return;
       const id = button.dataset.addService;
-      if (selected.has(id)) selected.delete(id); else selected.add(id);
+      if (selected.has(id)) selected.delete(id);
+      else if (selected.size < maxSelectedServices) selected.add(id);
       renderEstimate();
     });
     selectedContainer?.addEventListener("click", (event) => {
