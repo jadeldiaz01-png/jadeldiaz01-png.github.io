@@ -10,6 +10,7 @@ const form = document.getElementById("project-request-form");
 const submit = document.getElementById("submit-project");
 const status = document.getElementById("request-status");
 const turnstileStatus = document.getElementById("turnstile-status");
+const retryRuntime = document.getElementById("retry-runtime");
 const consent = document.getElementById("privacy-consent");
 const year = document.getElementById("year");
 if (year) year.textContent = String(new Date().getFullYear());
@@ -19,6 +20,7 @@ let turnstileToken = "";
 let turnstileAction = "project_request";
 let submitting = false;
 let completed = false;
+let bootstrapping = false;
 let fallbackIdempotencyKey = crypto.randomUUID();
 
 function setStatus(message, kind = "") {
@@ -79,6 +81,12 @@ async function waitForTurnstile(timeoutMs = 8000) {
 }
 
 async function bootstrapTurnstile() {
+  if (bootstrapping || completed) return;
+  bootstrapping = true;
+  turnstileToken = "";
+  if (retryRuntime) retryRuntime.hidden = true;
+  turnstileStatus.textContent = "Preparando verificación segura…";
+  setStatus("");
   const response = await fetch(CONFIG_URL, {
     method: "GET",
     headers: { "accept": "application/json" },
@@ -90,7 +98,8 @@ async function bootstrapTurnstile() {
   if (!config.turnstile_sitekey || config.turnstile_action !== "project_request") throw new Error("PUBLIC_CONFIG_INVALID");
   turnstileAction = config.turnstile_action;
   await waitForTurnstile();
-  widgetId = window.turnstile.render("#turnstile-widget", {
+  if (widgetId !== null) window.turnstile.reset(widgetId);
+  else widgetId = window.turnstile.render("#turnstile-widget", {
     sitekey: config.turnstile_sitekey,
     action: turnstileAction,
     theme: "auto",
@@ -111,6 +120,22 @@ async function bootstrapTurnstile() {
     },
   });
   turnstileStatus.textContent = "Completa la verificación para habilitar el envío.";
+  bootstrapping = false;
+}
+
+function explainRuntimeBlock(error) {
+  bootstrapping = false;
+  const code = String(error?.message || "RUNTIME_UNAVAILABLE");
+  const messages = {
+    PUBLIC_CONFIG_UNAVAILABLE: "El runtime no entregó configuración pública. El formulario queda bloqueado sin enviar datos.",
+    PUBLIC_CONFIG_INVALID: "La configuración pública del runtime no pasó contrato. El formulario queda bloqueado.",
+    TURNSTILE_CLIENT_TIMEOUT: "Cloudflare Turnstile no cargó a tiempo. Revisa bloqueadores de scripts o reintenta.",
+  };
+  turnstileToken = "";
+  turnstileStatus.textContent = messages[code] || "La verificación segura no está disponible. El formulario permanece bloqueado por seguridad.";
+  setStatus("No se enviaron datos. Nexus conserva el flujo en modo fail-closed hasta recuperar verificación segura.", "error");
+  if (retryRuntime) retryRuntime.hidden = false;
+  updateSubmitState();
 }
 
 function payloadFromForm() {
@@ -128,6 +153,9 @@ function payloadFromForm() {
 
 form?.addEventListener("change", updateSubmitState);
 form?.addEventListener("input", () => { if (!completed) setStatus(""); });
+retryRuntime?.addEventListener("click", () => {
+  bootstrapTurnstile().catch(explainRuntimeBlock);
+});
 
 form?.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -172,6 +200,7 @@ form?.addEventListener("submit", async (event) => {
     completed = true;
     clearIdempotencyKey();
     const projectId = body.project_id || "registrado";
+    window.RevenueAnalytics?.track("generate_lead", { lead_source: "project_request" });
     setStatus(`Solicitud recibida. ID de seguimiento: ${projectId}. Estado: ${body.state || "VALIDATED"}.`, "success");
     form.querySelectorAll("input,textarea,button").forEach((node) => { node.disabled = true; });
     turnstileStatus.textContent = body.replayed ? "Reintento reconciliado sin duplicar la solicitud." : "Verificación completada.";
@@ -192,8 +221,4 @@ form?.addEventListener("submit", async (event) => {
 
 preselectFromQuery();
 updateSubmitState();
-bootstrapTurnstile().catch(() => {
-  turnstileStatus.textContent = "La verificación segura no está disponible. El formulario permanece bloqueado por seguridad.";
-  setStatus("Runtime de solicitud no disponible. No se enviaron datos.", "error");
-  updateSubmitState();
-});
+bootstrapTurnstile().catch(explainRuntimeBlock);
