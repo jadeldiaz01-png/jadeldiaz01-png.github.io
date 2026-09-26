@@ -17,8 +17,12 @@
       const value = params.get(key);
       if (value) result[key] = value.slice(0, 120);
     }
+    const queryOfferId = params.get("offer_id");
+    const queryServiceId = params.get("service_id");
     if (offerId) result.offer_id = offerId;
+    else if (queryOfferId) result.offer_id = queryOfferId.slice(0, 120);
     if (serviceId) result.service_id = serviceId;
+    else if (queryServiceId) result.service_id = queryServiceId.slice(0, 120);
     result.landing_path = window.location.pathname;
     return result;
   }

@@ -505,6 +505,74 @@ h1, h2, h3 {
   line-height: 1.5;
 }
 
+.revenue-infra-section {
+  padding-top: clamp(4.5rem, 8vw, 7rem);
+}
+.revenue-infra-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+.revenue-infra-grid article {
+  min-height: 235px;
+  display: grid;
+  align-content: start;
+  padding: 1.15rem;
+  border: 1px solid rgba(116,192,252,.16);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(116,192,252,.055), rgba(255,255,255,.018));
+}
+.revenue-infra-grid span {
+  color: var(--accent-2);
+  font-size: .68rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+.revenue-infra-grid strong {
+  display: block;
+  margin: 1.55rem 0 .55rem;
+  font-size: 1rem;
+}
+.revenue-infra-grid p {
+  margin: 0;
+  color: var(--muted);
+  font-size: .82rem;
+  line-height: 1.6;
+}
+.revenue-infra-grid small {
+  align-self: end;
+  margin-top: 1.2rem;
+  color: var(--accent);
+  font-size: .7rem;
+  font-weight: 850;
+}
+.revenue-state-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .85rem;
+  margin-top: 1rem;
+}
+.revenue-state-strip > div {
+  min-height: 96px;
+  padding: 1rem;
+  border: 1px solid rgba(99,230,190,.14);
+  border-radius: 14px;
+  background: rgba(3,5,10,.34);
+}
+.revenue-state-strip span {
+  display: block;
+  color: var(--accent);
+  font-size: .62rem;
+  font-weight: 900;
+  letter-spacing: .1em;
+}
+.revenue-state-strip strong {
+  display: block;
+  margin-top: .45rem;
+  font-size: .86rem;
+  line-height: 1.45;
+}
+
 .governance-panel { display: grid; grid-template-columns: .92fr 1.08fr; gap: 2.2rem; padding: clamp(1.5rem, 4vw, 2.8rem); border: 1px solid rgba(177,151,252,.18); border-radius: 26px; background: radial-gradient(circle at 10% 0%, rgba(177,151,252,.11), transparent 34%), linear-gradient(135deg, rgba(255,255,255,.04), rgba(255,255,255,.015)); }
 .governance-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: .8rem; }
 .governance-grid > div { min-height: 118px; display: grid; align-content: center; padding: 1rem; border: 1px solid rgba(255,255,255,.08); border-radius: 14px; background: rgba(3,5,10,.28); }
@@ -573,7 +641,8 @@ h1, h2, h3 {
   .pricing-card.featured { transform: none; }
   .process-grid { grid-template-columns: repeat(2, 1fr); }
   .benchmark-grid { grid-template-columns: repeat(2, 1fr); }
-  .payment-link-grid, .nexus-payment-protocol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .payment-link-grid, .nexus-payment-protocol, .revenue-infra-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .revenue-state-strip { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 780px) {
@@ -602,7 +671,7 @@ h1, h2, h3 {
   .hero-trust { display: grid; grid-template-columns: 1fr 1fr; }
   .agent-console { min-height: 430px; border-radius: 20px; }
   .console-events > div { grid-template-columns: 44px 1fr; }
-  .signal-strip, .services-grid, .process-grid, .pricing-grid, .benchmark-grid, .governance-grid, .payment-link-grid, .nexus-payment-protocol { grid-template-columns: 1fr; }
+  .signal-strip, .services-grid, .process-grid, .pricing-grid, .benchmark-grid, .governance-grid, .payment-link-grid, .nexus-payment-protocol, .revenue-infra-grid { grid-template-columns: 1fr; }
   .signal-strip > div { min-height: 105px; }
   .service-card { min-height: 395px; }
   .section-block { padding-top: 5.5rem; }
