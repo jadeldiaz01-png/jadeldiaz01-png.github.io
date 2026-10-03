@@ -128,7 +128,7 @@
       statusLabel: "Piloto · sin promesas de ingresos",
       setup: 1800,
       monthly: 349,
-      priceLabel: "Pilotos desde US$1,800"
+      priceLabel: "Desde US$1,800 + US$349/mes"
     },
     {
       id: "quant",
@@ -154,7 +154,7 @@
       statusLabel: "Servicio de ingeniería",
       setup: 2500,
       monthly: 299,
-      priceLabel: "Desde US$2,500",
+      priceLabel: "Desde US$2,500 + US$299/mes",
       paymentLinks: PAYMENT_LINKS.governance
     },
     {
@@ -168,7 +168,7 @@
       statusLabel: "Proyecto a medida",
       setup: 4500,
       monthly: 790,
-      priceLabel: "Desde US$4,500 + soporte"
+      priceLabel: "Desde US$4,500 + US$790/mes"
     }
   ];
 
@@ -249,18 +249,18 @@
     <section class="commercial-home" data-view="home">
       <section class="hero-v2" id="inicio">
         <div class="hero-copy reveal">
-          <div class="eyebrow"><span class="live-dot"></span> Agentic Systems Studio · 2026</div>
-          <h1>Agentes de IA que <span>trabajan con controles reales.</span></h1>
-          <p class="lead">Diseñamos automatización, agentes, media intelligence, integraciones y sistemas de decisión con ingeniería, seguridad y aprobación humana donde importa.</p>
+          <div class="eyebrow"><span class="live-dot"></span> Automatización e IA aplicada para operaciones reales</div>
+          <h1>Convierte trabajo repetitivo en <span>sistemas de IA que puedes controlar.</span></h1>
+          <p class="lead">Diseñamos e integramos agentes y automatizaciones para soporte, ventas, datos y operaciones, con alcance claro, supervisión humana y controles verificables desde el inicio.</p>
           <div class="actions">
-            <a class="button primary" href="#servicios">Explorar servicios <span aria-hidden="true">↘</span></a>
-            <a class="button secondary" href="#configurador">Configurar una solución</a>
+            <a class="button primary" href="/solicitar-proyecto.html">Cuéntanos qué quieres automatizar <span aria-hidden="true">↗</span></a>
+            <a class="button secondary" href="#servicios">Ver soluciones y precios</a>
           </div>
           <div class="hero-trust" aria-label="Principios de operación">
-            <span>✓ Human-in-the-loop</span>
-            <span>✓ Fail-closed</span>
-            <span>✓ APIs oficiales</span>
-            <span>✓ Evidencia auditable</span>
+            <span>✓ Alcance antes de implementar</span>
+            <span>✓ Supervisión humana</span>
+            <span>✓ Integraciones oficiales</span>
+            <span>✓ Trazabilidad técnica</span>
           </div>
         </div>
 
@@ -268,7 +268,7 @@
           <div class="console-bar">
             <span class="console-dot"></span><span class="console-dot"></span><span class="console-dot"></span>
             <span class="console-title">Jadel Agent Control Plane</span>
-            <span class="console-state">ONLINE</span>
+            <span class="console-state">CONTROLLED</span>
           </div>
           <div class="agent-core">
             <div class="core-orbit orbit-a"><span>Media</span><span>Data</span><span>Sales</span></div>
@@ -283,11 +283,11 @@
         </div>
       </section>
 
-      <section class="signal-strip reveal" aria-label="Capacidades verificables">
-        <div><strong>4</strong><span>plataformas sociales en conectores CineForge</span></div>
-        <div><strong>3</strong><span>niveles de madurez visibles en el catálogo</span></div>
-        <div><strong>0</strong><span>acciones críticas autónomas sin gates</span></div>
-        <div><strong>24/7</strong><span>arquitectura preparada para observabilidad</span></div>
+      <section class="signal-strip reveal" aria-label="Cómo reducimos el riesgo de implementación">
+        <div><strong>01</strong><span>alcance y entregables definidos antes de construir</span></div>
+        <div><strong>02</strong><span>estado de madurez visible por cada servicio</span></div>
+        <div><strong>03</strong><span>aprobación humana para acciones sensibles</span></div>
+        <div><strong>04</strong><span>evidencia y observabilidad incorporadas al diseño</span></div>
       </section>
 
       <section class="section-block" id="servicios">
@@ -410,6 +410,27 @@
         </div>
       </section>
 
+      <section class="section-block revenue-infra-section" id="infraestructura-comercial">
+        <div class="section-heading reveal">
+          <div>
+            <div class="eyebrow">Infraestructura comercial</div>
+            <h2>Preparado para vender sin perder control operativo.</h2>
+          </div>
+          <p>El sitio combina catálogo, solicitud gobernada, PayPal alojado y evidencia operacional. La automatización ayuda a preparar y reconciliar; pagos, contratos, publicaciones y trading siguen sujetos a aprobación humana.</p>
+        </div>
+        <div class="revenue-infra-grid reveal" aria-label="Capas de infraestructura para ingresos">
+          <article><span>01</span><strong>Checkout alojado</strong><p>PayPal Payment Links para servicios listos; API y webhooks solo detrás del backend con secretos y reconciliación.</p><small>Activo para servicios con link</small></article>
+          <article><span>02</span><strong>Intake verificable</strong><p>Formulario con Turnstile, límites, idempotencia y workflow durable antes de crear compromisos.</p><small>Activo con gates fail-closed</small></article>
+          <article><span>03</span><strong>Ledger de evidencia</strong><p>Pagos, brief, alcance, aprobaciones y entregables deben quedar trazados antes de activar operación.</p><small>Siguiente expansión</small></article>
+          <article><span>04</span><strong>Operación de agentes</strong><p>Nexus coordina briefs, scoring, tareas y reportes; no ejecuta pagos salientes, contratos, publicaciones ni trading real.</p><small>Supervisado</small></article>
+        </div>
+        <div class="revenue-state-strip reveal">
+          <div><span>ACTIVO</span><strong>Catálogo + Payment Links + intake</strong></div>
+          <div><span>PRÓXIMO</span><strong>Webhook PayPal + ledger + aprobaciones</strong></div>
+          <div><span>GATE</span><strong>Sin evidencia humana, no hay fulfillment automático</strong></div>
+        </div>
+      </section>
+
       <section class="section-block governance-section" id="gobernanza">
         <div class="governance-panel reveal">
           <div>
@@ -430,14 +451,14 @@
 
       <section class="section-block benchmark-section">
         <div class="section-heading reveal">
-          <div><div class="eyebrow">Posicionamiento</div><h2>Diseñado para competir en 2026 sin copiar a nadie.</h2></div>
-          <p>Tomamos los patrones que convierten en SaaS modernos —valor inmediato, producto visible, pricing, prueba social verificable y demos— y los combinamos con una diferenciación fuerte: gobernanza y madurez explícita.</p>
+          <div><div class="eyebrow">Diferenciación verificable</div><h2>Menos promesas. Más claridad, control y resultados que se pueden comprobar.</h2></div>
+          <p>Cada solución muestra qué resuelve, qué incluye, cuánto puede costar y qué controles intervienen. Así puedes evaluar el servicio antes de iniciar una conversación comercial.</p>
         </div>
         <div class="benchmark-grid">
-          <div class="benchmark-card reveal"><span>01</span><strong>Producto visible</strong><p>El visitante entiende qué hace cada agente antes de hablar con ventas.</p></div>
-          <div class="benchmark-card reveal"><span>02</span><strong>Pricing orientativo</strong><p>Reduce fricción sin prometer un alcance que todavía no fue descubierto.</p></div>
-          <div class="benchmark-card reveal"><span>03</span><strong>Interacción útil</strong><p>Filtros y configurador convierten la web en una mini experiencia de producto.</p></div>
-          <div class="benchmark-card reveal"><span>04</span><strong>Confianza verificable</strong><p>Sin logos inventados, ROI fabricado ni estados de producción falsos.</p></div>
+          <div class="benchmark-card reveal"><span>01</span><strong>Valor comprensible</strong><p>Explicamos el resultado esperado y el alcance técnico sin obligarte a descifrar una lista de tecnologías.</p></div>
+          <div class="benchmark-card reveal"><span>02</span><strong>Coste con contexto</strong><p>Los precios orientativos ayudan a decidir sin convertir una estimación inicial en una promesa de alcance.</p></div>
+          <div class="benchmark-card reveal"><span>03</span><strong>Exploración útil</strong><p>Filtros y configurador permiten comparar capacidades y preparar un alcance inicial con menos fricción.</p></div>
+          <div class="benchmark-card reveal"><span>04</span><strong>Confianza verificable</strong><p>Estados, límites y evidencias se comunican sin testimonios inventados, métricas fabricadas ni capacidades presentadas como terminadas antes de estarlo.</p></div>
         </div>
       </section>
 
@@ -497,11 +518,11 @@
   if (headerNav) {
     headerNav.innerHTML = `
       <a href="/" data-nav="home">Inicio</a>
-      <a href="/#servicios" data-home-nav>Servicios</a>
+      <a href="/#servicios" data-home-nav>Soluciones</a>
+      <a href="/#metodo" data-home-nav>Método</a>
       <a href="/#precios" data-home-nav>Precios</a>
-      <a href="/#pagos" data-home-nav>Pagos</a>
-      <a href="/#gobernanza" data-home-nav>Seguridad</a>
-      <a href="/solicitar-proyecto.html" data-intake-nav="true">Solicitar proyecto</a>
+      <a href="/#gobernanza" data-home-nav>Confianza</a>
+      <a class="nav-cta" href="/solicitar-proyecto.html" data-intake-nav="true">Solicitar proyecto</a>
       <a href="/?view=privacy" data-nav="privacy">Privacidad</a>
       <a href="/?view=terms" data-nav="terms">Condiciones</a>
       <a href="${DATA_DELETION_URL}" data-nav="data-deletion">Eliminar datos</a>`;
