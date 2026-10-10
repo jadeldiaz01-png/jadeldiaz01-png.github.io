@@ -63,6 +63,19 @@ function resetTurnstile() {
   updateSubmitState();
 }
 
+function attributionFromQuery() {
+  const params = new URLSearchParams(window.location.search);
+  const bounded = (name) => String(params.get(name) || "").trim().slice(0, 120);
+  const offerId = bounded("offer_id");
+  return {
+    offer_id: /^[a-z][a-z0-9_]{0,63}$/.test(offerId) ? offerId : "",
+    utm_source: bounded("utm_source"),
+    utm_medium: bounded("utm_medium"),
+    utm_campaign: bounded("utm_campaign"),
+    utm_content: bounded("utm_content"),
+  };
+}
+
 function preselectFromQuery() {
   const values = new URLSearchParams(window.location.search).get("services") || "";
   const requested = values.split(",").map((value) => value.trim()).filter((value) => ALLOWED_SERVICES.has(value));
@@ -148,6 +161,7 @@ function payloadFromForm() {
     notes: String(data.get("notes") || "").trim(),
     locale: document.documentElement.lang || "es-DO",
     turnstile_token: turnstileToken,
+    ...attributionFromQuery(),
   };
 }
 

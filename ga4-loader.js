@@ -51,10 +51,9 @@
 
     window.dataLayer = window.dataLayer || [];
     gtag("js", new Date());
-    gtag("config", cfg.measurementId, {
-      send_page_view: true,
-      debug_mode: cfg.debugMode === true
-    });
+    const configParams = { send_page_view: true };
+    if (cfg.debugMode === true) configParams.debug_mode = true;
+    gtag("config", cfg.measurementId, configParams);
 
     const script = document.createElement("script");
     script.async = true;
