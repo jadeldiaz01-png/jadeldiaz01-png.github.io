@@ -18,10 +18,19 @@
     "utm_source",
     "utm_medium",
     "utm_campaign",
-    "utm_content",
-    "utm_term"
+    "utm_content"
   ]);
   const forbidden = /(name|email|phone|company|notes|message|payment|token|secret|idempotency)/i;
+  const allowedAttributionValues = Object.freeze({
+    utm_source: new Set(["website", "service_catalog", "use_case_path", "pricing", "google", "bing", "linkedin", "workana", "upwork", "freelancer", "youtube", "facebook", "instagram", "referral"]),
+    utm_medium: new Set(["homepage", "organic", "referral", "social", "marketplace", "cpc"]),
+    utm_campaign: new Set(["service_intake", "blueprint_entry", "revenue_funnel_v1", "automation_blueprint", "support_tickets", "sales_intelligence", "dashboard_intelligence"]),
+    utm_content: new Set(["automation_blueprint", "whatsapp_ai", "sales_intelligence"]),
+    offer_id: new Set(["whatsapp_support", "automation_blueprint", "sales_lead_intelligence"]),
+    service_id: new Set(["architecture", "support", "sales", "social", "cineforge", "meta", "analytics", "revenue", "quant", "governance", "multiagent"]),
+    landing_path: new Set(["/", "/automatizacion-procesos-ia-rd.html", "/whatsapp-ia-empresas-rd.html", "/agente-ventas-ia-rd.html", "/solicitar-proyecto.html"]),
+    lead_source: new Set(["website"])
+  });
   const measurementPattern = /^G-[A-Z0-9]+$/;
   let initialized = false;
   let consentGranted = false;
@@ -31,7 +40,11 @@
     for (const [key, raw] of Object.entries(params)) {
       if (!parameterAllowlist.has(key) || forbidden.test(key)) continue;
       const value = String(raw ?? "").trim();
-      if (value) clean[key] = value.slice(0, 120);
+      if (!value) continue;
+      const allowedValues = allowedAttributionValues[key];
+      if (allowedValues && !allowedValues.has(value)) continue;
+      if (key === "cta_id" && !/^service_quote_[a-z0-9]{1,32}$/.test(value)) continue;
+      clean[key] = value.slice(0, 120);
     }
     return clean;
   }
@@ -51,10 +64,9 @@
 
     window.dataLayer = window.dataLayer || [];
     gtag("js", new Date());
-    gtag("config", cfg.measurementId, {
-      send_page_view: true,
-      debug_mode: cfg.debugMode === true
-    });
+    const configParams = { send_page_view: true };
+    if (cfg.debugMode === true) configParams.debug_mode = true;
+    gtag("config", cfg.measurementId, configParams);
 
     const script = document.createElement("script");
     script.async = true;

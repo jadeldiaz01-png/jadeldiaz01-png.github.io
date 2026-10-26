@@ -41,7 +41,7 @@
     <section class="request-grid" aria-labelledby="request-title">
       <form id="project-request-form" class="request-card" novalidate>
         <div>
-          <div class="eyebrow">Paso 1 de 2</div>
+          <div class="eyebrow">Solicitud</div>
           <h2 id="request-title">Cuéntanos qué necesitas</h2>
           <p>Selecciona de 1 a 8 capacidades. Los datos se usan únicamente para evaluar y responder a esta solicitud.</p>
         </div>
@@ -79,13 +79,26 @@
         <p id="request-status" class="request-status" role="status" aria-live="polite"></p>
       </form>
 
-      <aside class="request-card request-assurance">
-        <div class="eyebrow">Paso 2 de 2</div>
+      <section id="request-confirmation" class="request-card request-confirmation" aria-labelledby="request-confirmation-title" tabindex="-1" hidden>
+        <div class="eyebrow">Solicitud registrada</div>
+        <h2 id="request-confirmation-title">Gracias. Ya tenemos tu solicitud.</h2>
+        <p id="request-confirmation-summary" class="request-confirmation-summary" role="status" aria-live="polite"></p>
+        <ol class="request-confirmation-steps">
+          <li><strong>Revisión de alcance y precio</strong><span>La solicitud se revisará antes de preparar una cotización.</span></li>
+          <li><strong>Aceptación de la cotización</strong><span>Podrás revisar y aceptar el alcance y el importe propuestos.</span></li>
+          <li><strong>Checkout PayPal individual</strong><span>Se habilita después de aceptar la cotización y confirmar la disponibilidad del checkout.</span></li>
+        </ol>
+        <p class="request-confirmation-payment">Enviar esta solicitud no crea una cotización ni una orden PayPal y no inicia un cobro.</p>
+        <a class="button secondary full" href="/#servicios">Volver al catálogo</a>
+      </section>
+
+      <aside id="request-assurance" class="request-card request-assurance">
+        <div class="eyebrow">Después de enviar</div>
         <h2>Qué ocurre después</h2>
         <ol>
-          <li><strong>VALIDATED</strong><span>El runtime valida estructura, origen, Turnstile, límites e idempotencia.</span></li>
-          <li><strong>POLICY_CHECK</strong><span>Un workflow durable abre la revisión de política y evidencia.</span></li>
-          <li><strong>HUMAN REVIEW</strong><span>Alcance, precio, contratos, credenciales o acciones externas requieren aprobación cuando corresponda.</span></li>
+          <li><strong>1. SOLICITUD RECIBIDA</strong><span>El runtime valida el formulario y registra la solicitud.</span></li>
+          <li><strong>2. REVISIÓN DE ALCANCE</strong><span>Se revisan los servicios y se define una cotización con alcance y precio.</span></li>
+          <li><strong>3. CHECKOUT PAYPAL</strong><span>Solo después de aceptar la cotización y si el checkout está habilitado. Enviar el formulario no crea una orden ni genera un cobro.</span></li>
         </ol>
         <div class="nexus-intake-panel" aria-labelledby="nexus-intake-title">
           <div class="eyebrow">Nexus AI Automation v0.3.0</div>

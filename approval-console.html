@@ -32,6 +32,7 @@
         <h2>Token de operador</h2>
         <div class="form-grid">
           <label class="full-field">Bearer token<input id="admin-token" type="password" autocomplete="off" required></label>
+          <label class="full-field">Protected main SHA para comandos asistidos<input id="protected-main-sha" type="text" inputmode="latin" autocomplete="off" pattern="[0-9a-f]{40}" placeholder="aa65ed3373acea5f7da0d1541ee4363583241473"></label>
         </div>
         <button class="button primary full" type="submit">Cargar pendientes</button>
         <p id="approval-status" class="request-status" role="status" aria-live="polite"></p>
@@ -43,6 +44,7 @@
           <li><strong>PAYMENT</strong><span>Webhook verificado no activa fulfillment sin reconciliación humana.</span></li>
           <li><strong>NEXUS</strong><span>Sin aprobación no hay job de producción ni acciones externas.</span></li>
           <li><strong>AUDIT</strong><span>Cada decisión se registra como evento de aprobación.</span></li>
+          <li><strong>ASSIST</strong><span>La consola prepara comandos exactos; el operador conserva la decisión final.</span></li>
         </ol>
       </aside>
     </section>

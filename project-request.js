@@ -9,6 +9,9 @@ const ALLOWED_SERVICES = new Set([
 const form = document.getElementById("project-request-form");
 const submit = document.getElementById("submit-project");
 const status = document.getElementById("request-status");
+const confirmation = document.getElementById("request-confirmation");
+const confirmationSummary = document.getElementById("request-confirmation-summary");
+const assurance = document.getElementById("request-assurance");
 const turnstileStatus = document.getElementById("turnstile-status");
 const retryRuntime = document.getElementById("retry-runtime");
 const consent = document.getElementById("privacy-consent");
@@ -61,6 +64,19 @@ function resetTurnstile() {
   turnstileToken = "";
   if (widgetId !== null && window.turnstile) window.turnstile.reset(widgetId);
   updateSubmitState();
+}
+
+function attributionFromQuery() {
+  const params = new URLSearchParams(window.location.search);
+  const bounded = (name) => String(params.get(name) || "").trim().slice(0, 120);
+  const offerId = bounded("offer_id");
+  return {
+    offer_id: /^[a-z][a-z0-9_]{0,63}$/.test(offerId) ? offerId : "",
+    utm_source: bounded("utm_source"),
+    utm_medium: bounded("utm_medium"),
+    utm_campaign: bounded("utm_campaign"),
+    utm_content: bounded("utm_content"),
+  };
 }
 
 function preselectFromQuery() {
@@ -148,6 +164,7 @@ function payloadFromForm() {
     notes: String(data.get("notes") || "").trim(),
     locale: document.documentElement.lang || "es-DO",
     turnstile_token: turnstileToken,
+    ...attributionFromQuery(),
   };
 }
 
@@ -199,11 +216,21 @@ form?.addEventListener("submit", async (event) => {
 
     completed = true;
     clearIdempotencyKey();
-    const projectId = body.project_id || "registrado";
+    const projectId = String(body.project_id || "registrado").slice(0, 64);
     window.RevenueAnalytics?.track("generate_lead", { lead_source: "project_request" });
-    setStatus(`Solicitud recibida. ID de seguimiento: ${projectId}. Estado: ${body.state || "VALIDATED"}.`, "success");
-    form.querySelectorAll("input,textarea,button").forEach((node) => { node.disabled = true; });
-    turnstileStatus.textContent = body.replayed ? "Reintento reconciliado sin duplicar la solicitud." : "Verificación completada.";
+    const receiptMessage = body.replayed
+      ? `Esta solicitud ya estaba registrada y no se duplicó. Folio de seguimiento: ${projectId}.`
+      : `Tu solicitud quedó registrada. Folio de seguimiento: ${projectId}.`;
+    setStatus(receiptMessage, "success");
+    if (confirmation && confirmationSummary) {
+      confirmationSummary.textContent = receiptMessage;
+      confirmation.hidden = false;
+      form.hidden = true;
+      if (assurance) assurance.hidden = true;
+      confirmation.focus();
+    } else {
+      form.querySelectorAll("input,textarea,button").forEach((node) => { node.disabled = true; });
+    }
   } catch (error) {
     const code = String(error?.message || "REQUEST_FAILED");
     const messages = {
