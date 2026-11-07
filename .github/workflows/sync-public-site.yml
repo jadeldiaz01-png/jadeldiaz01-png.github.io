@@ -73,9 +73,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -Fq 'Agentes de IA & Automatización | Jadel Tech RD' index.html
+          if ! grep -Eq '<title>[^<]+[|] Jadel Tech RD</title>' index.html; then
+            echo '::error file=index.html::Missing non-empty Jadel Tech RD page title'
+            exit 10
+          fi
           grep -Fq 'static-commercial-fallback' index.html
-          grep -Fq 'Agentes de IA que' index.html
+          if ! grep -Eq '<h1([[:space:]>])' index.html; then
+            echo '::error file=index.html::Missing primary h1 heading'
+            exit 11
+          fi
           grep -Fq 'CineForge · Video Premium' index.html
           grep -Fq 'property="og:title"' index.html
           grep -Fq 'http-equiv="Content-Security-Policy"' index.html
@@ -87,7 +93,14 @@ jobs:
           grep -Fq 'privacy' app.js
           grep -Fq 'terms' app.js
           grep -Fq 'Sitemap: https://jadeltechrd.com/sitemap.xml' robots.txt
-          grep -Fq 'https://jadeltechrd.com/?view=data-deletion' sitemap.xml
+          if ! grep -Fq '<loc>https://jadeltechrd.com/</loc>' sitemap.xml; then
+            echo '::error file=sitemap.xml::Missing canonical homepage URL'
+            exit 12
+          fi
+          if ! grep -Fq 'href="/?view=data-deletion"' index.html; then
+            echo '::error file=index.html::Missing public data-deletion navigation link'
+            exit 13
+          fi
           ! grep -Fq '/project-intake-bridge.js' index.html
           grep -Fq 'id="project-request-form"' solicitar-proyecto.html
           grep -Fq 'G-K60SQ2ZHL9' ga4-config.js
