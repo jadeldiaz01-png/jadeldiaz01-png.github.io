@@ -1,0 +1,69 @@
+name: Verify live AdSense ownership only
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/adsense-public-smoke.yml'
+      - 'index.html'
+      - 'ads.txt'
+      - 'guias.html'
+      - 'guia-*.html'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  adsense-public-smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Assert real public HTTPS serves the publisher verification (no ads)
+        shell: bash
+        env:
+          DOMAIN: jadeltechrd.com
+          PUBLISHER: ca-pub-4830696678723029
+        run: |
+          set -euo pipefail
+          home=$(mktemp)
+          txt=$(mktemp)
+          guide=$(mktemp)
+          trap 'rm -f "$home" "$txt" "$guide"' EXIT
+
+          fetch() {
+            local pathname="$1" destination="$2" code
+            code=$(curl --fail --silent --show-error --location \
+              --connect-timeout 8 --max-time 20 \
+              --proto '=https' --proto-redir '=https' --tlsv1.2 \
+              -H 'Cache-Control: no-cache' \
+              --output "$destination" --write-out '%{http_code}' \
+              "https://${DOMAIN}${pathname}") || return 1
+            test "$code" = '200'
+            test -s "$destination"
+          }
+
+          ready=false
+          for attempt in 1 2 3 4 5 6; do
+            echo "PUBLIC_ADSENSE_SMOKE_ATTEMPT=$attempt"
+            if fetch '/' "$home" && \
+               grep -Fq "<meta name=\"google-adsense-account\" content=\"${PUBLISHER}\">" "$home" && \
+               fetch '/ads.txt' "$txt" && \
+               grep -Fxq 'google.com, pub-4830696678723029, DIRECT, f08c47fec0942fa0' "$txt" && \
+               test "$(wc -l < "$txt")" -eq 1 && \
+               fetch '/guias.html' "$guide" && \
+               grep -Fq 'Guías prácticas de inteligencia artificial y automatización' "$guide"; then
+              ready=true
+              break
+            fi
+            if [ "$attempt" -lt 6 ]; then sleep 8; fi
+          done
+
+          test "$ready" = true || { echo 'PUBLIC_ADSENSE_OWNERSHIP=FAIL'; exit 3; }
+          ! grep -Fq 'adsbygoogle.js' "$home"
+          ! grep -Fq 'pagead2.googlesyndication.com' "$home"
+          echo "PUBLIC_ADSENSE_META=PASS"
+          echo "PUBLIC_ADS_TXT=PASS"
+          echo "PUBLIC_EDITORIAL_GUIDES=PASS"
+          echo "PUBLIC_AD_SCRIPT_NOT_LOADED=PASS"
+          echo "PUBLIC_SOURCE_SHA=${GITHUB_SHA}"
