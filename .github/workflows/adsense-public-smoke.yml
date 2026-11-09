@@ -59,7 +59,43 @@ jobs:
             if [ "$attempt" -lt 6 ]; then sleep 8; fi
           done
 
-          test "$ready" = true || { echo 'PUBLIC_ADSENSE_OWNERSHIP=FAIL'; exit 3; }
+          if [ "$ready" != true ]; then
+            echo 'PUBLIC_ADSENSE_OWNERSHIP=FAIL'
+            echo 'PUBLIC_DIAGNOSTICS_BEGIN'
+            for spec in '/:home' '/ads.txt:ads' '/guias.html:guides'; do
+              route="${spec%%:*}"
+              name="${spec#*:}"
+              body=$(mktemp)
+              code=$(curl --silent --show-error --location --connect-timeout 8 --max-time 20 \
+                --proto '=https' --proto-redir '=https' --tlsv1.2 \
+                -H 'Cache-Control: no-cache' --output "$body" --write-out '%{http_code}' \
+                "https://${DOMAIN}${route}" || true)
+              echo "PUBLIC_DIAG_${name}_HTTP=${code:-curl_error}"
+              echo "PUBLIC_DIAG_${name}_BYTES=$(wc -c < "$body")"
+              if [ "$name" = 'home' ]; then
+                if grep -Fq "<meta name=\"google-adsense-account\" content=\"${PUBLISHER}\">" "$body"; then
+                  echo 'PUBLIC_DIAG_HOME_META=YES'
+                else
+                  echo 'PUBLIC_DIAG_HOME_META=NO'
+                fi
+                if grep -Fq 'Blueprint de automatización de leads desde US$250' "$body"; then
+                  echo 'PUBLIC_DIAG_HOME_FINGERPRINT=CANONICAL_BLUEPRINT'
+                elif grep -Fq 'Agentes de IA &amp; Automatización' "$body" || grep -Fq 'Agentes de IA & Automatización' "$body"; then
+                  echo 'PUBLIC_DIAG_HOME_FINGERPRINT=ROOT_LEGACY'
+                else
+                  echo 'PUBLIC_DIAG_HOME_FINGERPRINT=UNKNOWN'
+                fi
+              elif [ "$name" = 'ads' ]; then
+                grep -Fxq 'google.com, pub-4830696678723029, DIRECT, f08c47fec0942fa0' "$body" && echo 'PUBLIC_DIAG_ADS_TXT_MATCH=YES' || echo 'PUBLIC_DIAG_ADS_TXT_MATCH=NO'
+                grep -Fq '<html' "$body" && echo 'PUBLIC_DIAG_ADS_TXT_HTML_RESPONSE=YES' || echo 'PUBLIC_DIAG_ADS_TXT_HTML_RESPONSE=NO'
+              else
+                grep -Fq 'Guías prácticas de inteligencia artificial y automatización' "$body" && echo 'PUBLIC_DIAG_GUIDE_PRESENT=YES' || echo 'PUBLIC_DIAG_GUIDE_PRESENT=NO'
+              fi
+              rm -f "$body"
+            done
+            echo 'PUBLIC_DIAGNOSTICS_END'
+            exit 3
+          fi
           ! grep -Fq 'adsbygoogle.js' "$home"
           ! grep -Fq 'pagead2.googlesyndication.com' "$home"
           echo "PUBLIC_ADSENSE_META=PASS"
