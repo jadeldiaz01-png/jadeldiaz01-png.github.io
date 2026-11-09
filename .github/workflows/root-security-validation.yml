@@ -72,6 +72,28 @@ jobs:
           test "$(tr -d '\r\n' < CNAME)" = 'jadeltechrd.com'
           echo 'ROOT_PUBLIC_SITE_SECURITY=PASS'
 
+      - name: Enforce AdSense ownership-only and educational content safety
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq '<meta name="google-adsense-account" content="ca-pub-4830696678723029">' index.html
+          test "$(grep -Fc 'name="google-adsense-account"' index.html)" -eq 1
+          grep -Fxq 'google.com, pub-4830696678723029, DIRECT, f08c47fec0942fa0' ads.txt
+          test "$(wc -l < ads.txt)" -eq 1
+          for file in guias.html guia-automatizacion-leads.html guia-chatbot-soporte.html; do
+            test -s "$file"
+            grep -Fq 'name="google-adsense-account" content="ca-pub-4830696678723029"' "$file"
+            grep -Fq 'rel="canonical"' "$file"
+            ! grep -Fq 'adsbygoogle.js' "$file"
+          done
+          ! grep -Fq 'adsbygoogle.js' index.html
+          ! grep -Fq 'pagead2.googlesyndication.com' index.html
+          for route in guias.html guia-automatizacion-leads.html guia-chatbot-soporte.html; do
+            grep -Fq "<loc>https://jadeltechrd.com/$route</loc>" sitemap.xml
+          done
+          echo 'ADSENSE_OWNERSHIP_ONLY=PASS'
+
+
       - name: Require immutable third-party Actions
         shell: bash
         run: |
