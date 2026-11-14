@@ -4,6 +4,7 @@
   const STORAGE_KEY = "jadel.analytics_consent.v1";
   const GRANTED = "granted";
   const DENIED = "denied";
+  const english = document.documentElement.lang.toLowerCase().startsWith("en") || window.location.hash === "#en";
 
   function safeRead() {
     try {
@@ -48,7 +49,7 @@
     button.id = "analytics-preferences-trigger";
     button.className = "analytics-preferences-trigger";
     button.type = "button";
-    button.textContent = "Preferencias de analítica";
+    button.textContent = english ? "Analytics preferences" : "Preferencias de analítica";
     button.addEventListener("click", () => renderPanel());
     document.body.appendChild(button);
   }
@@ -76,7 +77,16 @@
     panel.setAttribute("role", "dialog");
     panel.setAttribute("aria-modal", "false");
     panel.setAttribute("aria-labelledby", "analytics-consent-title");
-    panel.innerHTML = `
+    panel.innerHTML = english ? `
+      <div class="analytics-consent-copy">
+        <strong id="analytics-consent-title">Optional analytics</strong>
+        <p>We may use Google Analytics 4 to measure visits and improve the site. Names, email addresses, phone numbers, notes, and payment data are not sent to Analytics. Advertising stays disabled.</p>
+        <a href="/en/privacy.html#analytics">Read the privacy policy</a>
+      </div>
+      <div class="analytics-consent-actions">
+        <button type="button" class="button secondary" data-consent="denied">Essential only</button>
+        <button type="button" class="button primary" data-consent="granted">Accept analytics</button>
+      </div>` : `
       <div class="analytics-consent-copy">
         <strong id="analytics-consent-title">Analítica opcional</strong>
         <p>Podemos usar Google Analytics 4 para medir visitas y mejorar el sitio. No enviamos a Analytics nombres, email, teléfono, notas ni datos de pago. La publicidad permanece desactivada.</p>
