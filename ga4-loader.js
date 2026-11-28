@@ -18,11 +18,21 @@
     "utm_source",
     "utm_medium",
     "utm_campaign",
-    "utm_content",
-    "utm_term"
+    "utm_content"
   ]);
   const forbidden = /(name|email|phone|company|notes|message|payment|token|secret|idempotency)/i;
+  const allowedAttributionValues = Object.freeze({
+    utm_source: new Set(["google", "bing", "linkedin", "workana", "upwork", "freelancer", "youtube", "facebook", "instagram", "referral"]),
+    utm_medium: new Set(["organic", "referral", "social", "marketplace", "cpc"]),
+    utm_campaign: new Set(["revenue_funnel_v1", "automation_blueprint", "support_tickets", "sales_intelligence", "dashboard_intelligence"]),
+    utm_content: new Set(["automation_blueprint", "whatsapp_ai", "sales_intelligence"]),
+    offer_id: new Set(["whatsapp_support", "automation_blueprint", "sales_lead_intelligence"]),
+    service_id: new Set(["architecture", "support", "sales", "social", "cineforge", "meta", "analytics", "revenue", "quant", "governance", "multiagent"]),
+    landing_path: new Set(["/", "/en/", "/en/request-project.html", "/ai-automation-blueprint.html", "/automatizacion-procesos-ia-rd.html", "/whatsapp-ia-empresas-rd.html", "/agente-ventas-ia-rd.html", "/solicitar-proyecto.html", "/demo-seguimiento-leads.html", "/en/lead-follow-up-demo.html"]),
+    lead_source: new Set(["website", "project_request"])
+  });
   const measurementPattern = /^G-[A-Z0-9]+$/;
+  const ctaIdPattern = /^(?:service_quote_[a-z0-9]{1,32}|homepage_blueprint_(?:entry|scope|pricing)|english_blueprint_(?:entry|request)|lead_demo_(?:es|en)|hero_(?:request|catalog)|final_request)$/;
   let initialized = false;
   let consentGranted = false;
 
@@ -31,7 +41,11 @@
     for (const [key, raw] of Object.entries(params)) {
       if (!parameterAllowlist.has(key) || forbidden.test(key)) continue;
       const value = String(raw ?? "").trim();
-      if (value) clean[key] = value.slice(0, 120);
+      if (!value) continue;
+      const allowedValues = allowedAttributionValues[key];
+      if (allowedValues && !allowedValues.has(value) && !(key === "utm_content" && ctaIdPattern.test(value))) continue;
+      if (key === "cta_id" && !ctaIdPattern.test(value)) continue;
+      clean[key] = value.slice(0, 120);
     }
     return clean;
   }
@@ -51,10 +65,9 @@
 
     window.dataLayer = window.dataLayer || [];
     gtag("js", new Date());
-    gtag("config", cfg.measurementId, {
-      send_page_view: true,
-      debug_mode: cfg.debugMode === true
-    });
+    const configParams = { send_page_view: true };
+    if (cfg.debugMode === true) configParams.debug_mode = true;
+    gtag("config", cfg.measurementId, configParams);
 
     const script = document.createElement("script");
     script.async = true;

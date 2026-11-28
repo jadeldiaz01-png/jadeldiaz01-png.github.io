@@ -4,24 +4,7 @@
   const SERVICE_ID_PATTERN = /^[a-z0-9-]{1,64}$/;
   const MAX_INTAKE_SERVICES = 8;
   const CONTACT_EMAIL = "darklife_jadel@hotmail.com";
-  const PAYPAL_PAYMENT_URL = "https://www.paypal.com/";
   const NEXUS_AGENT = "nexus_ai_automation_v0.3.0";
-  const PAYMENT_LINKS = {
-    architecture: {
-      setup: "https://www.paypal.com/ncp/payment/8XFP5NDQUN9J2"
-    },
-    support: {
-      setup: "https://www.paypal.com/ncp/payment/NN639WR9P7LPW",
-      monthly: "https://www.paypal.com/ncp/payment/G7EJQLHYUKLG8"
-    },
-    meta: {
-      setup: "https://www.paypal.com/ncp/payment/5EX2AGMB85P62"
-    },
-    governance: {
-      setup: "https://www.paypal.com/ncp/payment/3TQUF8WU2WHR2"
-    }
-  };
-
   const services = [
     {
       id: "architecture",
@@ -34,8 +17,7 @@
       statusLabel: "Servicio de ingeniería",
       setup: 250,
       monthly: 0,
-      priceLabel: "Desde US$250",
-      paymentLinks: PAYMENT_LINKS.architecture
+      priceLabel: "Desde US$250"
     },
     {
       id: "support",
@@ -48,8 +30,7 @@
       statusLabel: "Implementable",
       setup: 900,
       monthly: 149,
-      priceLabel: "US$900 + US$149/mes",
-      paymentLinks: PAYMENT_LINKS.support
+      priceLabel: "US$900 + US$149/mes"
     },
     {
       id: "sales",
@@ -101,16 +82,15 @@
       statusLabel: "Servicio de ingeniería",
       setup: 850,
       monthly: 0,
-      priceLabel: "Desde US$850",
-      paymentLinks: PAYMENT_LINKS.meta
+      priceLabel: "Desde US$850"
     },
     {
       id: "analytics",
       category: "data",
       icon: "▦",
       name: "Dashboards & Decision Intelligence",
-      summary: "Paneles operativos y analíticos para convertir métricas, tickets, actividad de agentes o datos de negocio en decisiones accionables.",
-      deliverables: ["KPIs", "Visual analytics", "Filtros", "Exportación"],
+      summary: "Diseño de KPIs y dashboards ejecutivos u operativos con validación de fuentes, trazabilidad de métricas y alertas para convertir datos de negocio en decisiones accionables.",
+      deliverables: ["Definición de KPIs", "Dashboard ejecutivo y operativo", "Calidad y trazabilidad", "Alertas y exportación"],
       status: "available",
       statusLabel: "Implementable",
       setup: 650,
@@ -128,7 +108,7 @@
       statusLabel: "Piloto · sin promesas de ingresos",
       setup: 1800,
       monthly: 349,
-      priceLabel: "Pilotos desde US$1,800"
+      priceLabel: "Desde US$1,800 + US$349/mes"
     },
     {
       id: "quant",
@@ -154,8 +134,7 @@
       statusLabel: "Servicio de ingeniería",
       setup: 2500,
       monthly: 299,
-      priceLabel: "Desde US$2,500",
-      paymentLinks: PAYMENT_LINKS.governance
+      priceLabel: "Desde US$2,500 + US$299/mes"
     },
     {
       id: "multiagent",
@@ -168,7 +147,7 @@
       statusLabel: "Proyecto a medida",
       setup: 4500,
       monthly: 790,
-      priceLabel: "Desde US$4,500 + soporte"
+      priceLabel: "Desde US$4,500 + US$790/mes"
     }
   ];
 
@@ -198,32 +177,6 @@
     return `${INTAKE_PATH}?${params.toString()}`;
   };
 
-  const paymentLabel = {
-    setup: "Pagar implementación",
-    monthly: "Pagar soporte mensual"
-  };
-
-  const servicePaymentLinks = (service) => {
-    const links = Object.entries(service.paymentLinks || {});
-    if (!links.length) return "";
-    return `
-      <div class="service-payment-links" aria-label="Pagos PayPal disponibles para ${service.name}">
-        ${links.map(([type, url]) => `<a href="${url}" rel="noopener noreferrer" target="_blank">${paymentLabel[type]}</a>`).join("")}
-      </div>`;
-  };
-
-  const paymentOptionsMarkup = () => services
-    .filter((service) => service.paymentLinks)
-    .map((service) => `
-      <article>
-        <strong>${service.name}</strong>
-        <span>${service.priceLabel}</span>
-        <div>
-          ${Object.entries(service.paymentLinks).map(([type, url]) => `<a href="${url}" rel="noopener noreferrer" target="_blank">${paymentLabel[type]}</a>`).join("")}
-        </div>
-      </article>`)
-    .join("");
-
   const serviceCard = (service) => `
     <article class="service-card reveal" data-category="${service.category}" data-service-id="${service.id}">
       <div class="service-topline">
@@ -240,54 +193,128 @@
           <span class="price-caption">Precio de lanzamiento</span>
           <strong>${service.priceLabel}</strong>
         </div>
-        <button class="mini-action" type="button" data-add-service="${service.id}" aria-pressed="false">Añadir</button>
+        <div class="service-actions">
+          <button class="mini-action" type="button" data-add-service="${service.id}" aria-pressed="false">Añadir</button>
+          <a class="mini-action service-quote" data-revenue-event="offer_cta_click" data-cta-id="service_quote_${service.id}" href="${governedIntakeUrl([service.id])}">Solicitar cotización</a>
+        </div>
       </div>
-      ${servicePaymentLinks(service)}
     </article>`;
 
   const homeMarkup = `
     <section class="commercial-home" data-view="home">
       <section class="hero-v2" id="inicio">
         <div class="hero-copy reveal">
-          <div class="eyebrow"><span class="live-dot"></span> Agentic Systems Studio · 2026</div>
-          <h1>Agentes de IA que <span>trabajan con controles reales.</span></h1>
-          <p class="lead">Diseñamos automatización, agentes, media intelligence, integraciones y sistemas de decisión con ingeniería, seguridad y aprobación humana donde importa.</p>
+          <div class="eyebrow"><span class="live-dot"></span> Oferta de entrada · un solo flujo</div>
+          <h1>Ordena el seguimiento de tus leads <span>antes de construir una automatización.</span></h1>
+          <p class="lead">Un proceso de captación y seguimiento, desde US$250 y máximo 2.5 h. Recibe un plan técnico antes de decidir si construirlo; cotización humana, sin prometer ventas.</p>
           <div class="actions">
-            <a class="button primary" href="#servicios">Explorar servicios <span aria-hidden="true">↘</span></a>
-            <a class="button secondary" href="#configurador">Configurar una solución</a>
+            <a class="button primary" data-revenue-event="offer_cta_click" data-cta-id="homepage_blueprint_entry" href="/solicitar-proyecto.html?services=architecture&amp;offer_id=automation_blueprint&amp;service_id=architecture&amp;utm_content=homepage_blueprint_entry">Solicita el Blueprint — desde US$250 <span aria-hidden="true">↗</span></a>
+            <a class="button secondary" href="#blueprint-alcance">Qué incluye</a>
           </div>
           <div class="hero-trust" aria-label="Principios de operación">
-            <span>✓ Human-in-the-loop</span>
-            <span>✓ Fail-closed</span>
-            <span>✓ APIs oficiales</span>
-            <span>✓ Evidencia auditable</span>
+            <span>✓ Alcance antes de implementar</span>
+            <span>✓ Supervisión humana</span>
+            <span>✓ Integraciones oficiales</span>
+            <span>✓ Trazabilidad técnica</span>
           </div>
         </div>
 
-        <div class="agent-console reveal" aria-label="Visualización del sistema de agentes">
+        <div class="agent-console reveal" aria-label="Ejemplo ilustrativo del alcance del Blueprint, no una automatización activa">
           <div class="console-bar">
             <span class="console-dot"></span><span class="console-dot"></span><span class="console-dot"></span>
-            <span class="console-title">Jadel Agent Control Plane</span>
-            <span class="console-state">ONLINE</span>
+            <span class="console-title">Blueprint · un flujo</span>
+            <span class="console-state">EJEMPLO</span>
           </div>
           <div class="agent-core">
-            <div class="core-orbit orbit-a"><span>Media</span><span>Data</span><span>Sales</span></div>
-            <div class="core-orbit orbit-b"><span>Risk</span><span>Policy</span><span>Ops</span></div>
-            <div class="core-node"><strong>JT</strong><small>ORCHESTRATOR</small></div>
+            <div class="core-orbit orbit-a"><span>Web</span><span>Email</span><span>Chat</span></div>
+            <div class="core-orbit orbit-b"><span>Captura</span><span>Asigna</span><span>Sigue</span></div>
+            <div class="core-node"><strong>JT</strong><small>UN FLUJO</small></div>
           </div>
           <div class="console-events" aria-live="polite">
-            <div><span class="event-ok">PASS</span><b>Policy gate</b><small>external action requires approval</small></div>
-            <div><span class="event-ok">PASS</span><b>Evidence ledger</b><small>trace id attached</small></div>
-            <div><span class="event-wait">HITL</span><b>Human approval</b><small>waiting before side effect</small></div>
+            <div><span class="event-ok">01</span><b>Un solo proceso</b><small>Seguimiento de consultas, de entrada a respuesta.</small></div>
+            <div><span class="event-ok">02</span><b>Mapa + plan</b><small>Arquitectura recomendada y backlog priorizado.</small></div>
+            <div><span class="event-wait">03</span><b>Construcción aparte</b><small>El Blueprint define el plan; no conecta sistemas.</small></div>
+            <div><span class="event-wait">04</span><b>Revisión humana</b><small>Tú decides el alcance antes de pagar.</small></div>
           </div>
         </div>
       </section>
 
-      <section class="signal-strip reveal" aria-label="Capacidades verificables">
-        <div><strong>4</strong><span>plataformas sociales en conectores CineForge</span></div>
-        <div><strong>3</strong><span>niveles de madurez visibles en el catálogo</span></div>
-        <div><strong>0</strong><span>acciones críticas autónomas sin gates</span></div>
-        <div><strong>24/7</strong><span>arquitectura preparada para observabilidad</span></div>
+      <section class="section-block conversion-path-section" id="blueprint-alcance" aria-labelledby="blueprint-alcance-title">
+        <div class="section-heading reveal">
+          <div><div class="eyebrow">Oferta de entrada · un solo flujo</div>
+            <h2 id="blueprint-alcance-title">Evalúa el flujo y define un plan antes de construir.</h2>
+          </div>
+          <p>Para pequeñas empresas y consultoras que reciben consultas por web, WhatsApp o email y necesitan ordenar su seguimiento.</p>
+        </div>
+        <div class="conversion-path-grid reveal">
+          <article class="conversion-path-card"><span>Alcance</span><strong>Hasta 45 min de descubrimiento</strong><p>Revisamos un proceso, sus herramientas y las restricciones que afectan su viabilidad.</p></article>
+          <article class="conversion-path-card"><span>Entregables</span><strong>Mapa, arquitectura y backlog</strong><p>Incluye recomendaciones de integración, seguridad y revisión humana; una ronda de aclaraciones.</p></article>
+          <article class="conversion-path-card"><span>Límite</span><strong>Desde US$250 · máximo 2.5 h</strong><p>Es un diagnóstico y plan. El desarrollo, las integraciones productivas y el ROI se cotizan aparte; no se garantizan resultados.</p></article>
+          <article class="conversion-path-card"><span>Muestra y siguiente paso</span><strong>Revisa el formato antes de solicitar</strong><p><a href="/output/pdf/agentic-blueprint-illustrative-sample.pdf">Ejemplo ilustrativo, no un caso de cliente.</a> La compra real es: solicitud → cotización humana → checkout PayPal vinculado → inicio tras conciliar el pago.</p><p><a class="mini-action" href="/demo-seguimiento-leads.html">Explorar demo interactiva con datos sintéticos</a></p><a class="button primary" data-revenue-event="offer_cta_click" data-cta-id="homepage_blueprint_scope" href="/solicitar-proyecto.html?services=architecture&amp;offer_id=automation_blueprint&amp;service_id=architecture&amp;utm_content=homepage_blueprint_scope">Solicitar evaluación y cotización</a></article>
+        </div>
+      </section>
+
+      <section class="signal-strip reveal" aria-label="Cómo reducimos el riesgo de implementación">
+        <div><strong>01</strong><span>alcance y entregables definidos antes de construir</span></div>
+        <div><strong>02</strong><span>estado de madurez visible por cada servicio</span></div>
+        <div><strong>03</strong><span>aprobación humana para acciones sensibles</span></div>
+        <div><strong>04</strong><span>evidencia y observabilidad incorporadas al diseño</span></div>
+      </section>
+
+      
+      <section class="section-block conversion-path-section" aria-labelledby="business-solutions-title">
+        <div class="section-heading reveal">
+          <div><div class="eyebrow">Para emprendedores y pequeñas empresas</div>
+          <h2 id="business-solutions-title">Tu negocio necesita clientes atendidos, no más complejidad.</h2></div>
+          <p>Explora soluciones con alcance definido. Sin ventas garantizadas, integraciones no autorizadas ni cobros inmediatos.</p>
+        </div>
+        <div class="conversion-path-grid reveal">
+          <a class="conversion-path-card" href="/soluciones-negocios.html#soluciones">
+            <span>Web y consultas</span><strong>Presenta tu negocio y organiza solicitudes.</strong>
+            <p>Diseño web a medida, recorrido de contacto y medición consensuada.</p>
+            <small>Evaluación y cotización previas</small>
+          </a>
+          <a class="conversion-path-card" href="/soluciones-negocios.html#soluciones">
+            <span>Automatización</span><strong>Revisa un proceso o flujo que falla.</strong>
+            <p>Problemas acotados de integraciones, webhooks y automatizaciones.</p>
+            <small>Precio según diagnóstico y alcance</small>
+          </a>
+          <a class="conversion-path-card" href="/whatsapp-ia-empresas-rd.html">
+            <span>Atención supervisada</span><strong>Organiza las consultas y su seguimiento.</strong>
+            <p>La API oficial depende de elegibilidad y acceso del cliente.</p>
+            <small>Servicio sujeto a validación</small>
+          </a>
+        </div>
+      </section>
+
+      <section class="section-block conversion-path-section" aria-labelledby="conversion-path-title">
+        <div class="section-heading reveal">
+          <div>
+            <div class="eyebrow">Rutas de implementación</div>
+            <h2 id="conversion-path-title">Elige por resultado, no por tecnología.</h2>
+          </div>
+          <p>Las mejores páginas B2B reducen fricción: cada visitante debe reconocer su problema, ver un camino concreto y solicitar alcance sin perderse en jerga técnica.</p>
+        </div>
+        <div class="conversion-path-grid reveal">
+          <a class="conversion-path-card" href="/solicitar-proyecto.html?services=support,analytics">
+            <span>Operaciones</span>
+            <strong>Responder clientes y tickets con trazabilidad.</strong>
+            <p>Soporte, clasificación, dashboard y escalación humana.</p>
+            <small>Soporte & Tickets + Dashboards</small>
+          </a>
+          <a class="conversion-path-card" href="/solicitar-proyecto.html?services=sales,revenue">
+            <span>Crecimiento</span>
+            <strong>Encontrar oportunidades sin prometer ingresos.</strong>
+            <p>Research, scoring, brief comercial y ledger de evidencia.</p>
+            <small>Sales + Revenue Intelligence</small>
+          </a>
+          <a class="conversion-path-card" href="/solicitar-proyecto.html?services=governance,multiagent">
+            <span>Gobernanza</span>
+            <strong>Llevar agentes a producción con controles.</strong>
+            <p>Policies, approvals, observabilidad, SLOs y workflows durables.</p>
+            <small>AI Governance + Multi-Agent</small>
+          </a>
+        </div>
       </section>
 
       <section class="section-block" id="servicios">
@@ -297,6 +324,7 @@
             <h2>Un estudio de agentes, no una caja negra.</h2>
           </div>
           <p>Cada servicio indica su nivel real de madurez. “Piloto” no se presenta como producción y “Research-only” nunca se vende como operación financiera real.</p>
+          <p>Para los 11 servicios, primero solicita y acepta una cotización. El checkout PayPal LIVE se habilita para cotizaciones aprobadas en USD de hasta US$14,800. Los importes mensuales usan una suscripción separada que el comprador debe aprobar en PayPal.</p>
         </div>
         <div class="filter-row reveal" role="group" aria-label="Filtrar servicios">
           ${categories.map(([id, label], index) => `<button type="button" class="filter-chip${index === 0 ? " is-active" : ""}" data-filter="${id}" aria-pressed="${index === 0}">${label}</button>`).join("")}
@@ -344,7 +372,7 @@
             <div class="estimate-row"><span>Soporte mensual</span><strong id="estimate-monthly">US$0</strong></div>
             <div class="estimate-note">Rango recomendado final: ±25% según integraciones, volumen y controles requeridos.</div>
             <button class="button primary full" type="button" id="copy-brief" disabled>Copiar brief de proyecto</button>
-            <a class="button secondary full is-disabled" href="#pagos" id="request-payment" aria-disabled="true">Solicitar alcance y pago</a>
+            <a class="button secondary full is-disabled" href="#pagos" id="request-payment" aria-disabled="true">Solicitar cotización</a>
             <span class="copy-feedback" id="copy-feedback" role="status"></span>
           </aside>
         </div>
@@ -361,9 +389,10 @@
         <div class="pricing-grid">
           <article class="pricing-card reveal">
             <span class="plan-label">Discover</span><h3>Agentic Blueprint</h3><div class="plan-price"><strong>US$250</strong><span>desde</span></div>
-            <p>Para identificar el primer workflow con ROI y controles claros.</p>
-            <ul><li>Discovery</li><li>Mapa de automatización</li><li>Arquitectura propuesta</li><li>Backlog y estimación</li></ul>
-            <a href="#configurador" class="button secondary full">Empezar por diagnóstico</a>
+            <p>Un proceso priorizado por impacto, coste, viabilidad y controles; sin prometer ROI.</p>
+            <ul><li>Mapa breve del flujo</li><li>Arquitectura recomendada</li><li>Backlog priorizado</li><li>Hasta 2.5 horas de trabajo</li></ul>
+            <a data-revenue-event="offer_cta_click" data-cta-id="homepage_blueprint_pricing" href="/solicitar-proyecto.html?services=architecture&amp;offer_id=automation_blueprint&amp;service_id=architecture&amp;utm_content=homepage_blueprint_pricing" class="button primary full">Solicitar alcance</a>
+            <a href="/ai-automation-blueprint.html" class="mini-action">Ver detalles ES / EN</a>
           </article>
           <article class="pricing-card featured reveal">
             <div class="popular-pill">Más adaptable</div><span class="plan-label">Build</span><h3>Business Agent</h3><div class="plan-price"><strong>US$1.5k</strong><span>setup desde</span></div>
@@ -390,23 +419,41 @@
         <div class="payment-panel reveal">
           <div>
             <div class="eyebrow">Pagos</div>
-            <h2>Contrata con PayPal y alcance confirmado.</h2>
-            <p>Cuenta PayPal autorizada por el propietario: <strong>${CONTACT_EMAIL}</strong>. Antes de enviar fondos, confirma alcance, moneda, entregables y fecha estimada de entrega.</p>
+            <h2>Pago PayPal vinculado a una cotización aprobada.</h2>
+            <p>Primero envía tu solicitud. Confirmamos alcance, moneda y entregables; después generamos un checkout PayPal vinculado a la cotización aprobada. LIVE admite pagos iniciales en USD de hasta US$14,800; las mensualidades requieren autorización separada en PayPal. La captura ocurre tras la aprobación del comprador; solo se marca PAID después de validar la firma del evento y conciliar orden, cotización, importe y divisa.</p>
           </div>
           <div class="payment-actions">
-            <a class="button primary full" href="${PAYPAL_PAYMENT_URL}" rel="noopener noreferrer">Abrir PayPal</a>
-            <a class="button secondary full" href="mailto:${CONTACT_EMAIL}?subject=Solicitud%20Jadel%20Tech%20RD&body=Hola%20Jadel%20Tech%20RD%2C%20quiero%20confirmar%20alcance%20y%20pago%20por%20PayPal.">Confirmar alcance</a>
-            <span>Formato Nexus: solicitud aprobada, pago PayPal, evidencia de pago, reconciliación y activación supervisada.</span>
+            <a class="button primary full" href="/solicitar-proyecto.html">Solicitar cotización</a>
+            <a class="button secondary full" href="mailto:${CONTACT_EMAIL}?subject=Solicitud%20Jadel%20Tech%20RD">Contactar</a>
+            <span>No envíes fondos a un enlace genérico: utiliza únicamente el checkout emitido para tu cotización aprobada.</span>
           </div>
         </div>
-        <div class="payment-link-grid reveal" aria-label="Enlaces PayPal oficiales por servicio">
-          ${paymentOptionsMarkup()}
-        </div>
         <div class="nexus-payment-protocol reveal" aria-label="Protocolo operativo Nexus">
-          <div><span>AUTO</span><strong>Selección y brief</strong><small>el configurador arma alcance, precio inicial y servicios.</small></div>
-          <div><span>HITL</span><strong>Confirmación humana</strong><small>alcance y entregables se aprueban antes del pago.</small></div>
-          <div><span>PAY</span><strong>PayPal</strong><small>pago manual o link oficial verificado cuando esté disponible.</small></div>
-          <div><span>OPS</span><strong>${NEXUS_AGENT}</strong><small>seguimiento, evidencias y operación con gates de seguridad.</small></div>
+          <div><span>AUTO</span><strong>Selección y brief</strong><small>el configurador prepara alcance y servicios.</small></div>
+          <div><span>HITL</span><strong>Cotización aprobada</strong><small>alcance, importe y entregables se aceptan antes del checkout.</small></div>
+          <div><span>PAY</span><strong>Checkout PayPal</strong><small>cada orden queda vinculada a quote_id y payment_order_id verificables.</small></div>
+          <div><span>OPS</span><strong>${NEXUS_AGENT}</strong><small>webhook PayPal LIVE configurado y firma inválida rechazada; primera conciliación positiva con captura real pendiente. No se marca PAID sin coincidencia exacta.</small></div>
+        </div>
+      </section>
+
+      <section class="section-block revenue-infra-section" id="infraestructura-comercial">
+        <div class="section-heading reveal">
+          <div>
+            <div class="eyebrow">Infraestructura comercial</div>
+            <h2>Solicitudes activas; verificación positiva del pago pendiente.</h2>
+          </div>
+          <p>El sitio recibe solicitudes y prepara checkouts PayPal LIVE para cotizaciones aprobadas en USD de hasta US$14,800; las mensualidades requieren aprobación separada en PayPal. El webhook está configurado y la prueba de firma inválida fue rechazada; falta validar la primera conciliación positiva con una captura real. Nexus solo marca PAID tras validar firma y coincidencia exacta de orden, cotización, importe y divisa.</p>
+        </div>
+        <div class="revenue-infra-grid reveal" aria-label="Capas de infraestructura para ingresos">
+          <article><span>01</span><strong>Checkout alojado</strong><p>La orden inicial se vincula a una cotización aprobada en USD de hasta US$14,800. Las mensualidades requieren una suscripción separada aprobada por el comprador; el trabajo solo inicia cuando la notificación firmada concuerda exactamente con orden, cotización, importe y divisa.</p><small>Tope inicial de US$14,800; conciliación positiva pendiente</small></article>
+          <article><span>02</span><strong>Intake verificable</strong><p>Formulario con Turnstile, límites, idempotencia y workflow durable antes de crear compromisos.</p><small>Activo con gates fail-closed</small></article>
+          <article><span>03</span><strong>Ledger de pagos</strong><p>El webhook LIVE y el rechazo de firmas inválidas están verificados. La primera conciliación positiva con una captura real sigue pendiente antes de confirmar el ledger y la entrega.</p><small>Primera conciliación positiva pendiente</small></article>
+          <article><span>04</span><strong>Operación de agentes</strong><p>Nexus coordina briefs, scoring, tareas y reportes; no ejecuta pagos salientes, contratos, publicaciones ni trading real.</p><small>Supervisado</small></article>
+        </div>
+        <div class="revenue-state-strip reveal">
+          <div><span>ACTIVO</span><strong>Catálogo + intake + órdenes PayPal supervisadas</strong></div>
+          <div><span>PRÓXIMO</span><strong>PayPal LIVE configurado · primera conciliación positiva pendiente</strong></div>
+          <div><span>GATE</span><strong>Sin evidencia humana, no hay fulfillment automático</strong></div>
         </div>
       </section>
 
@@ -430,14 +477,14 @@
 
       <section class="section-block benchmark-section">
         <div class="section-heading reveal">
-          <div><div class="eyebrow">Posicionamiento</div><h2>Diseñado para competir en 2026 sin copiar a nadie.</h2></div>
-          <p>Tomamos los patrones que convierten en SaaS modernos —valor inmediato, producto visible, pricing, prueba social verificable y demos— y los combinamos con una diferenciación fuerte: gobernanza y madurez explícita.</p>
+          <div><div class="eyebrow">Diferenciación verificable</div><h2>Menos promesas. Más claridad, control y resultados que se pueden comprobar.</h2></div>
+          <p>Cada solución muestra qué resuelve, qué incluye, cuánto puede costar y qué controles intervienen. Así puedes evaluar el servicio antes de iniciar una conversación comercial.</p>
         </div>
         <div class="benchmark-grid">
-          <div class="benchmark-card reveal"><span>01</span><strong>Producto visible</strong><p>El visitante entiende qué hace cada agente antes de hablar con ventas.</p></div>
-          <div class="benchmark-card reveal"><span>02</span><strong>Pricing orientativo</strong><p>Reduce fricción sin prometer un alcance que todavía no fue descubierto.</p></div>
-          <div class="benchmark-card reveal"><span>03</span><strong>Interacción útil</strong><p>Filtros y configurador convierten la web en una mini experiencia de producto.</p></div>
-          <div class="benchmark-card reveal"><span>04</span><strong>Confianza verificable</strong><p>Sin logos inventados, ROI fabricado ni estados de producción falsos.</p></div>
+          <div class="benchmark-card reveal"><span>01</span><strong>Valor comprensible</strong><p>Explicamos el resultado esperado y el alcance técnico sin obligarte a descifrar una lista de tecnologías.</p></div>
+          <div class="benchmark-card reveal"><span>02</span><strong>Coste con contexto</strong><p>Los precios orientativos ayudan a decidir sin convertir una estimación inicial en una promesa de alcance.</p></div>
+          <div class="benchmark-card reveal"><span>03</span><strong>Exploración útil</strong><p>Filtros y configurador permiten comparar capacidades y preparar un alcance inicial con menos fricción.</p></div>
+          <div class="benchmark-card reveal"><span>04</span><strong>Confianza verificable</strong><p>Estados, límites y evidencias se comunican sin testimonios inventados, métricas fabricadas ni capacidades presentadas como terminadas antes de estarlo.</p></div>
         </div>
       </section>
 
@@ -497,11 +544,13 @@
   if (headerNav) {
     headerNav.innerHTML = `
       <a href="/" data-nav="home">Inicio</a>
-      <a href="/#servicios" data-home-nav>Servicios</a>
+      <a href="/soluciones-negocios.html">Para negocios</a>
+      <a href="/#servicios" data-home-nav>Soluciones</a>
+      <a href="/#metodo" data-home-nav>Método</a>
       <a href="/#precios" data-home-nav>Precios</a>
-      <a href="/#pagos" data-home-nav>Pagos</a>
-      <a href="/#gobernanza" data-home-nav>Seguridad</a>
-      <a href="/solicitar-proyecto.html" data-intake-nav="true">Solicitar proyecto</a>
+      <a href="/#gobernanza" data-home-nav>Confianza</a>
+      <a class="nav-cta" href="/solicitar-proyecto.html" data-intake-nav="true">Solicitar proyecto</a>
+      <a href="/en/" lang="en">English</a>
       <a href="/?view=privacy" data-nav="privacy">Privacidad</a>
       <a href="/?view=terms" data-nav="terms">Condiciones</a>
       <a href="${DATA_DELETION_URL}" data-nav="data-deletion">Eliminar datos</a>`;
@@ -513,6 +562,8 @@
       <a href="/#servicios">Servicios</a>
       <a href="/#precios">Precios</a>
       <a href="/#pagos">Pagos</a>
+      <a href="/matriz-oportunidades.html">Matriz de oportunidades</a>
+      <a href="/en/" lang="en">English offer</a>
       <a href="/?view=privacy">Privacidad</a>
       <a href="/?view=terms">Condiciones</a>
       <a href="${DATA_DELETION_URL}">Eliminación de datos</a>`;
@@ -537,13 +588,13 @@
   const view = allowedViews.has(requested) ? requested : "home";
 
   const titles = {
-    home: "Agentes de IA & Automatización | Jadel Tech RD",
+    home: "Blueprint de automatización de leads desde US$250 | Jadel Tech RD",
     privacy: "Política de Privacidad | Jadel Tech RD",
     terms: "Condiciones del Servicio | Jadel Tech RD",
     "data-deletion": "Eliminación de Datos | Jadel Tech RD",
   };
   const descriptions = {
-    home: "Diseño e integración de agentes de IA, automatización, social intelligence, video, datos, seguridad y sistemas agentic con supervisión y gobernanza.",
+    home: "Plan técnico para automatizar un flujo de captación y seguimiento de clientes potenciales. Incluye mapa, arquitectura y backlog priorizado. Desde US$250.",
     privacy: "Política de Privacidad de las aplicaciones y servicios de Jadel Tech RD.",
     terms: "Condiciones del Servicio de las aplicaciones y servicios de Jadel Tech RD.",
     "data-deletion": "Instrucciones públicas para solicitar la eliminación de datos asociados a aplicaciones de Jadel Tech RD.",
